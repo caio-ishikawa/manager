@@ -3,16 +3,17 @@ import { login } from '../utils/login.ts';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserEmailContext } from '../global/contexts';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [password, setPassword] = useState('');
     const navigate = useNavigate(); 
 
     const submitData = async() =>{
-        console.log({email, password})
         let data = {
-            email: email,
+            email: globalEmail,
             password: password
         };
         Axios.post('http://localhost:3002/auth/login', data)
@@ -27,7 +28,7 @@ const Login = () => {
         <div>
             <p>REGISTER</p>
             <br/>
-            <input placeholder="Email" onChange={(e) => setEmail(e.target.value)}/>
+            <input placeholder="Email" onChange={(e) => setGlobalEmail(e.target.value)}/>
             <br/>
             <input placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
             <button onClick={() => submitData()}>Register</button>

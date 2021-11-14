@@ -7,11 +7,14 @@ import ActivityGrid from '../components/ActivityView';
 import ChatHeader from '../components/ChatHeader';
 import ChannelViewHeader from '../components/ChannelViewHeader';
 import { useNavigate } from 'react-router-dom';
-import { useHistory } from 'react-router';
+import { useContext } from 'react';
+import { UserEmailContext } from '../global/contexts';
 
 const Main = () => {
     const classes = useStyles();
     const navigate = useNavigate();
+    const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
+    console.log(globalEmail);
 
     return(
         <div className={classes.root}>

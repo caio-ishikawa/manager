@@ -1,11 +1,13 @@
 import { makeStyles } from '@mui/styles';
 import { Typography, Modal, Box, Button } from '@mui/material';
 import Axios from 'axios';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { UserEmailContext } from '../global/contexts';
 
 const ProjectList = () => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    const [globalEmail, setGlobalEmail] = useContext(UserEmailContext); 
     const [serverName, setServerName] = useState('');
 
     const handleModal = () => {
@@ -14,12 +16,12 @@ const ProjectList = () => {
 
     const submitData = () => {
         let data = {
-            email: "caio@caio.com",
+            email: globalEmail,
             name: serverName
         };
         Axios.post('http://localhost:3002/post/add_server', data)
             .then((res) => console.log(res));
-    }
+    };
 
     return (
         <div className={classes.box}>
@@ -39,13 +41,13 @@ const ProjectList = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             >
-            <Box className={classes.modal}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Customize your server 
-                </Typography>
-                <input placeholder="server name" onChange={(e) => setServerName(e.target.value)}/>
-                <Button onClick={() => submitData()}>Create server</Button>
-                </Box>
+                <Box className={classes.modal}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Customize your server 
+                    </Typography>
+                    <input placeholder="server name" onChange={(e) => setServerName(e.target.value)}/>
+                    <Button onClick={() => submitData()}>Create server</Button>
+                    </Box>
             </Modal>
         </div>
     )
