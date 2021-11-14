@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Axios from 'axios';
 import { register } from '../utils/register.ts';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
     const [firstName, setFirstName] = useState('');
@@ -32,6 +33,9 @@ const Register = () => {
             <br/>
             <input placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
             <button onClick={submitData}>Register</button>
+            <Link to="/">
+                <button>main</button>
+            </Link>
         </div>
     )
 };

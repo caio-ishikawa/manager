@@ -6,10 +6,12 @@ import ChannelView from '../components/ChannelView';
 import ActivityGrid from '../components/ActivityView';
 import ChatHeader from '../components/ChatHeader';
 import ChannelViewHeader from '../components/ChannelViewHeader';
-import { ClassNames } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router';
 
 const Main = () => {
     const classes = useStyles();
+    const navigate = useNavigate();
 
     return(
         <div className={classes.root}>

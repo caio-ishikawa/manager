@@ -11,7 +11,9 @@ app.use(express.json());
 
 // ROUTES //
 const authRoutes = require('./routes/Auth');
+const postRoutes = require('./routes/Post');
 app.use('/auth', authRoutes);
+app.use('/post', postRoutes);
 
 // DATABASE CONNECTION //
 mongoose.connect(secrets, (err) => {

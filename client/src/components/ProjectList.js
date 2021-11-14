@@ -1,19 +1,52 @@
-import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
-import { Box } from '@mui/system';
-import { Typography } from '@mui/material';
+import { Typography, Modal, Box, Button } from '@mui/material';
+import Axios from 'axios';
+import { useState } from 'react';
 
 const ProjectList = () => {
     const classes = useStyles();
+    const [open, setOpen] = useState(false);
+    const [serverName, setServerName] = useState('');
+
+    const handleModal = () => {
+        setOpen(!open);
+    };
+
+    const submitData = () => {
+        let data = {
+            email: "caio@caio.com",
+            name: serverName
+        };
+        Axios.post('http://localhost:3002/post/add_server', data)
+            .then((res) => console.log(res));
+    }
+
     return (
         <div className={classes.box}>
             <br></br>
             <div onClick={() => console.log('clicked')} className={classes.icon}>
                 <Typography className={classes.projectName} variant="h5">PJ</Typography>
             </div>
-            <div className={classes.addProject}>
-                <Typography className={classes.projectName} variant="h5">+</Typography>
+            <div onClick={() => handleModal()} className={classes.addProject}>
+                <Typography className={classes.addButton} variant="h5">+</Typography>
             </div>
+
+            {/* MODAL */}
+
+            <Modal
+            open={open}
+            onClose={handleModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            >
+            <Box className={classes.modal}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Customize your server 
+                </Typography>
+                <input placeholder="server name" onChange={(e) => setServerName(e.target.value)}/>
+                <Button onClick={() => submitData()}>Create server</Button>
+                </Box>
+            </Modal>
         </div>
     )
 };
@@ -30,7 +63,7 @@ const useStyles = makeStyles({
         width: "5.5vh",
         borderWidth: 1,
         borderRadius: 100,
-        backgroundColor: "white",
+        borderColor: "white",
         margin: "auto",
         display: "flex",
         alignItems: "center",
@@ -46,13 +79,27 @@ const useStyles = makeStyles({
         width: "5.5vh",
         borderWidth: 1,
         borderRadius: 100,
-        backgroundColor: "white",
+        backgroundColor: "#555562",
         display: "flex",
         alignItems: "center",
         cursor: "pointer",
         bottom: "20px",
         position: "absolute",
         marginLeft: "0.8vh"
+    },
+    addButton: {
+        color: "white",
+        width: "60%",
+        textAlign: "center"
+    },
+    modal: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        backgroundColor: "white",
+        textAlign: "center"
     }
 });
 
