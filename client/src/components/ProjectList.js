@@ -9,7 +9,19 @@ const ProjectList = () => {
     const [open, setOpen] = useState(false);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext); 
     const [serverName, setServerName] = useState('');
+    const [serverList, setServerList] = useState([]);
 
+    // Retrieves all user's servers //
+    useEffect(() => {
+        let data = {
+            email: globalEmail,
+        };
+        Axios.post('http://localhost:3002/get/servers', data)
+            .then((res) => {
+                setServerList(res.data);
+            });
+    }, [serverList]);
+    
     const handleModal = () => {
         setOpen(!open);
     };
@@ -29,6 +41,15 @@ const ProjectList = () => {
             <div onClick={() => console.log('clicked')} className={classes.icon}>
                 <Typography className={classes.projectName} variant="h5">PJ</Typography>
             </div>
+            {serverList ?
+            serverList.map((content) => (
+                <div onClick={() => console.log(content)} className={classes.icon}>
+                    <Typography className={classes.projectName} variant="h5">{content}</Typography>
+                </div>
+            )) 
+            :
+            <p>no server</p>
+            };
             <div onClick={() => handleModal()} className={classes.addProject}>
                 <Typography className={classes.addButton} variant="h5">+</Typography>
             </div>

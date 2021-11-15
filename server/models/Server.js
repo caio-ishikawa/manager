@@ -10,12 +10,6 @@ const ServerSchema = new mongoose.Schema({
         type: String,
         required: false
     }],
-    text_channels: [{
-        type: String
-    }],
-    voice_channels: [{
-        type: String
-    }],
     picture: {
         type: String
     },

@@ -17,7 +17,11 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         required: true,
         min: 8
-    }
+    },
+    servers: [{
+        type: String,
+        required: false
+    }]
 });
 
 module.exports = mongoose.model("User", UserSchema);
