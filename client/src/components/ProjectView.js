@@ -18,13 +18,15 @@ const ProjectView = () => {
     const [allChat, setAllChat] = useState([]);
     const [update, setUpdate] = useState(false);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
+    console.log("GLOBAL EMAIL: ", globalEmail);
     let chatArr = [];
 
     // logs message in terminal //
     useEffect(() => {
         console.log('ran');
-        socket.on("message", (msg) => {
-            setAllChat((_messages) => [..._messages, msg]);
+        socket.on("message", ({ message, email}) => {
+            //setAllChat({ ...allChat, [msg.email]: msg.message});
+            setAllChat((_messages) => [ ..._messages, { email, message }])
         });
     },[]);
         
@@ -35,17 +37,19 @@ const ProjectView = () => {
 
     // Sends hard coded message to room //
     const sendMessage = (e) => {
-        socket.emit('message', (message));
+        socket.emit('message', ({ message: message, email: globalEmail }));
+        e.preventDefault();
         setMessage('');
-    }
+    };
 
     const renderChat = () => {
         console.log(allChat);
         return allChat.map((string, idx) => {
+            console.log(string.email);
             return(
                 <div>
                     
-                    <p key={idx}>{string}</p>
+                    <p key={idx}>{string.email}: {string.message}</p>
                 </div>
             )
         })
@@ -58,7 +62,7 @@ const ProjectView = () => {
             <div className={classes.chat}>
                 <p>test</p>
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
-                {renderChat()}
+                {allChat ? renderChat() : console.log('no chat')} 
             </div>
             <div className={classes.chatContainer}>
                 <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} onChange={(e) => setMessage(e.target.value)} startAdornment={<IconButton><AddCircleIcon className={classes.icon}/></IconButton>}/>

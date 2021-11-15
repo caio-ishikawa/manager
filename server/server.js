@@ -42,8 +42,8 @@ io.on('connection', socket => {
         socket.join(roomName);
         console.log("you have joined", roomName);
     });
-    socket.on("message", (msg) => {
-        io.sockets.in(room).emit('message', msg);
+    socket.on("message", ({ message, email}) => {
+        io.sockets.in(room).emit('message', {message, email});
     })
 })
 
