@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { Typography, Modal, Box, Button } from '@mui/material';
+import { Typography, Modal, Box, Button, Avatar } from '@mui/material';
 import Axios from 'axios';
 import { useState, useContext, useEffect } from 'react';
 import { UserEmailContext, CurrentServerContext } from '../global/contexts';
@@ -47,14 +47,12 @@ const ProjectList = () => {
     return (
         <div className={classes.box}>
             <br></br>
-            <div onClick={() => console.log('clicked')} className={classes.icon}>
-                <Typography className={classes.projectName} variant="h5">PJ</Typography>
-            </div>
             {serverList ?
-            serverList.map((content) => (
-                <div onClick={() => setCurrentServer(content)} className={classes.icon}>
-                    <Typography className={classes.projectName} variant="h5">{content}</Typography>
+            serverList.map((content, idx) => (
+                <div key={idx} className={classes.serverIcon} onClick={() => setCurrentServer(content)}>
+                    <Avatar sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
                 </div>
+                
             )) 
             :
             <p>no server</p>
@@ -132,6 +130,12 @@ const useStyles = makeStyles({
         width: 400,
         backgroundColor: "white",
         textAlign: "center"
+    },
+    serverIcon: {
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: "2vh",
     }
 });
 

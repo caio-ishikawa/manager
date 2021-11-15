@@ -36,8 +36,8 @@ mongoose.connect(secrets, (err) => {
     }
 });
 
+// ESTABLISHES SOCKET CONNECTIONS //
 io.on('connection', socket => {
-    console.log("socket: ", socket.id);
     socket.on("join", (roomName) => {
         socket.join(roomName);
         console.log("you have joined", roomName);

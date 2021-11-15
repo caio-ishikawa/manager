@@ -24,23 +24,22 @@ const ProjectView = () => {
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     let chatArr = [];
 
-    // logs message in terminal //
+    // Listens to new messages //
     useEffect(() => {
         console.log('ran');
         socket.on("message", ({ message, email}) => {
-            console.log({ message, email });
             //setAllChat({ ...allChat, [msg.email]: msg.message});
             setAllChat((_messages) => [ ..._messages, { email, message }])
         });
     },[]);
         
-    // Joins test room //
+    // Joins desired server //
     useEffect(() =>  {
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
         socket.emit("join", (currentServer ? currentServer : "test"));
     }, [currentServer]);
 
-    // Sends hard coded message to room //
+    // Sends message to desired server //
     const sendMessage = (e) => {
         console.log("SENDING MESSAGE: ", message);
         socket.emit('message', ({ message: message, email: globalEmail, room: currentServer }));
@@ -59,8 +58,10 @@ const ProjectView = () => {
                             <Avatar sx={{ height: "5vh", width: "5vh", marginBottom: "2vh", marginTop: "1.5vh"}} alt={string.email} src={def_profile}/>
                         </Grid>
                         <Grid item sm={10} md={9} lg={9}>
-                            <p key={idx}>{string.email}</p>
-                            <p key={idx}>{string.message}</p>
+                            <div key={idx}>
+                                <p>{string.email}:</p>
+                                <p>{string.message}</p>
+                            </div>
                         </Grid>
                     </Grid>
                     <hr color="#555562" className={classes.divider}/>
@@ -73,13 +74,12 @@ const ProjectView = () => {
     return(
         <div className={classes.box}>
             <br></br>
-            <p>PROJECT</p>
             <div className={classes.chat}>
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
                 {allChat ? renderChat() : console.log('no chat')} 
             </div>
             <div className={classes.chatContainer}>
-                <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} onChange={(e) => setMessage(e.target.value)} startAdornment={<IconButton><AddCircleIcon className={classes.icon}/></IconButton>}/>
+                <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={message} onChange={(e) => setMessage(e.target.value)} startAdornment={<IconButton><AddCircleIcon className={classes.icon}/></IconButton>}/>
             </div>
         </div>
     )
