@@ -7,7 +7,8 @@ import { IconButton } from "@mui/material";
 import ChatHeader from "./ChatHeader";
 import io from 'socket.io-client';
 import { useEffect, useState, useContext } from 'react';
-import { UserEmailContext } from "../global/contexts";
+import { UserEmailContext, CurrentServerContext } from "../global/contexts";
+import Axios from 'axios';
     
 const socket = io.connect('http://localhost:3002/');
 
@@ -16,15 +17,17 @@ const ProjectView = () => {
     const classes = useStyles();
     const [message, setMessage] = useState('');
     const [allChat, setAllChat] = useState([]);
+    const [addedUsername, setAddedUsername] = useState('');
     const [update, setUpdate] = useState(false);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
-    console.log("GLOBAL EMAIL: ", globalEmail);
+    const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     let chatArr = [];
 
     // logs message in terminal //
     useEffect(() => {
         console.log('ran');
         socket.on("message", ({ message, email}) => {
+            console.log({ message, email });
             //setAllChat({ ...allChat, [msg.email]: msg.message});
             setAllChat((_messages) => [ ..._messages, { email, message }])
         });
@@ -32,20 +35,22 @@ const ProjectView = () => {
         
     // Joins test room //
     useEffect(() =>  {
-        socket.emit("join", ("test"));
-    }, []);
+        console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
+        socket.emit("join", (currentServer ? currentServer : "test"));
+    }, [currentServer]);
 
     // Sends hard coded message to room //
     const sendMessage = (e) => {
-        socket.emit('message', ({ message: message, email: globalEmail }));
+        console.log("SENDING MESSAGE: ", message);
+        socket.emit('message', ({ message: message, email: globalEmail, room: currentServer }));
         e.preventDefault();
         setMessage('');
     };
 
+    // Renders chat on display //
     const renderChat = () => {
-        console.log(allChat);
+        //console.log(allChat);
         return allChat.map((string, idx) => {
-            console.log(string.email);
             return(
                 <div>
                     
@@ -53,6 +58,16 @@ const ProjectView = () => {
                 </div>
             )
         })
+    };
+
+    // Adds user to current server (PLACEHOLDER) //
+    const addUser = () => {
+        let data = {
+            email: addedUsername,
+            server: currentServer
+        };
+        Axios.post('http://localhost:3002/post/add_user', data)
+            .then((res) => console.log(res));
     }
 
     return(
@@ -61,6 +76,8 @@ const ProjectView = () => {
             <p>PROJECT</p>
             <div className={classes.chat}>
                 <p>test</p>
+                <input placholder="username" onChange={(e) => setAddedUsername(e.target.value)}/>
+                <Button onClick={() => addUser()}>Add user</Button>
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
                 {allChat ? renderChat() : console.log('no chat')} 
             </div>

@@ -34,5 +34,19 @@ router.post('/add_server', async(req, res) => {
     }
 });
 
+router.post('/add_user', async(req, res) => {
+    const email = req.body.email;
+    const serverName = req.body.server;
+
+    const user = await User.findOne({ email: email });
+    if (!user) {
+        res.status(400).send("No user found");
+    } else {
+        const updatedUser = user.servers.push(serverName);
+        const savedUSer = user.save();
+        res.send(user);
+    }
+});
+
 
 module.exports = router;

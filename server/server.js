@@ -36,15 +36,14 @@ mongoose.connect(secrets, (err) => {
     }
 });
 
-let room = [];
 io.on('connection', socket => {
     console.log("socket: ", socket.id);
     socket.on("join", (roomName) => {
-        room = roomName;
         socket.join(roomName);
         console.log("you have joined", roomName);
     });
-    socket.on("message", ({ message, email}) => {
+    socket.on("message", ({ message, email, room}) => {
+        console.log(typeof room);
         io.sockets.in(room).emit('message', {message, email});
     })
 })

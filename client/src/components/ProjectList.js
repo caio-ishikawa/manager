@@ -2,12 +2,13 @@ import { makeStyles } from '@mui/styles';
 import { Typography, Modal, Box, Button } from '@mui/material';
 import Axios from 'axios';
 import { useState, useContext, useEffect } from 'react';
-import { UserEmailContext } from '../global/contexts';
+import { UserEmailContext, CurrentServerContext } from '../global/contexts';
 
 const ProjectList = () => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext); 
+    const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     const [serverName, setServerName] = useState('');
     const [serverList, setServerList] = useState([]);
 
@@ -21,11 +22,19 @@ const ProjectList = () => {
                 setServerList(res.data);
             });
     }, [serverList]);
-    
+
+    // Changes server context //
+    const swapServer = (content) => {
+        console.log("SETTING SERVER TO: ", content)
+        setCurrentServer(content);
+    }; 
+
+    // Opens and closes modal //        
     const handleModal = () => {
         setOpen(!open);
     };
 
+    // Submits new server info to backend //
     const submitData = () => {
         let data = {
             email: globalEmail,
@@ -43,7 +52,7 @@ const ProjectList = () => {
             </div>
             {serverList ?
             serverList.map((content) => (
-                <div onClick={() => console.log(content)} className={classes.icon}>
+                <div onClick={() => setCurrentServer(content)} className={classes.icon}>
                     <Typography className={classes.projectName} variant="h5">{content}</Typography>
                 </div>
             )) 
