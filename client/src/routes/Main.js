@@ -22,16 +22,16 @@ const Main = () => {
                 <Grid className={classes.root} item sm={1} md={0.6} lg={0.6}>
                     <ProjectList/> 
                 </Grid>
-                <Grid item sm={2} md={2.4} lg={2}>
-                    <ChannelViewHeader/>
-                    <ChannelView/>
+                <Grid item sm={2} md={2.6} lg={2.3}>
+                    <ActivityGrid/>
                 </Grid>
                 <Grid item sm={7} md={6.5} lg={6.9}>
                     <ChatHeader/>
                     <ProjectView/> 
                 </Grid>
-                <Grid item sm={2} md={2.5} lg={2.5}>
-                    <ActivityGrid/>
+                <Grid item sm={2} md={2.3} lg={2.2}>
+                    <ChannelViewHeader/>
+                    <ChannelView/>
                 </Grid>
             </Grid>
         </div>

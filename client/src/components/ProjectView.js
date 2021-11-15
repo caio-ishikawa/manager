@@ -1,7 +1,7 @@
 import { ClassNames } from "@emotion/react";
 import { makeStyles } from "@mui/styles";
 import TextField from '@mui/material/TextField';
-import { InputBase, Button, Avatar, Divider} from "@mui/material";
+import { InputBase, Button, Avatar, Divider, Tooltip} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton, Grid } from "@mui/material";
 import ChatHeader from "./ChatHeader";
@@ -94,7 +94,7 @@ const useStyles = makeStyles({
         overflow: "hidden"
     },
     chat: {
-        height: "78vh",
+        height: "83vh",
         borderWidth: "5px",
         borderBottomWidth: "1px",
         borderBottomColor: "#555562",

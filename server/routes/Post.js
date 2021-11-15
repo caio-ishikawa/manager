@@ -23,9 +23,10 @@ router.post('/add_server', async(req, res) => {
 
         try {
             // Saves server and adds server name to the User Schema //
-            const savedServer = await newServer.save()
             serverUser.servers.push(serverName);
+            newServer.members.push(email);
             const savedUser = serverUser.save();
+            const savedServer = newServer.save()
             res.send(newServer);
             console.log(serverUser);
         } catch(err) {
@@ -39,11 +40,14 @@ router.post('/add_user', async(req, res) => {
     const serverName = req.body.server;
 
     const user = await User.findOne({ email: email });
+    const server = await Server.findOne({ name: serverName });
     if (!user) {
         res.status(400).send("No user found");
     } else {
         const updatedUser = user.servers.push(serverName);
+        const updatedServer = server.members.push(email);
         const savedUSer = user.save();
+        const savedServer = server.save();
         res.send(user);
     }
 });

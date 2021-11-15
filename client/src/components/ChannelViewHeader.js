@@ -1,4 +1,7 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
+import { useEffect, useState, useContext } from 'react';
+import { UserEmailContext, CurrentServerContext } from "../global/contexts";
+import Axios from 'axios';
 
 const ChannelViewHeader = () => {
 

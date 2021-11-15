@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { Typography, Modal, Box, Button, Avatar } from '@mui/material';
+import { Typography, Modal, Box, Button, Avatar, Tooltip } from '@mui/material';
 import Axios from 'axios';
 import { useState, useContext, useEffect } from 'react';
 import { UserEmailContext, CurrentServerContext } from '../global/contexts';
@@ -50,7 +50,9 @@ const ProjectList = () => {
             {serverList ?
             serverList.map((content, idx) => (
                 <div key={idx} className={classes.serverIcon} onClick={() => setCurrentServer(content)}>
-                    <Avatar sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
+                    <Tooltip title={content} placement="right">
+                        <Avatar sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
+                    </Tooltip>
                 </div>
                 
             )) 

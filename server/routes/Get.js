@@ -21,4 +21,17 @@ router.post('/servers', async(req, res) => {
     }
 });
 
+router.post('/all_members', async (req, res) => {
+    const email = req.body.email;
+    const serverName = req.body.server;
+
+    if (!emailExists(email)) {
+        res.status(400).send("NOT LOGGED IN");
+    } else {
+        const server = await Server.findOne({ name: serverName });
+        const serverUsers = server.members;
+        res.send(server.members);
+    }
+})
+
 module.exports = router;
