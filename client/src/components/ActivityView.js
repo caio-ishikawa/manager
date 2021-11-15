@@ -7,6 +7,9 @@ const ActivityGrid = () => {
         <div className={classes.box}>
             <br></br>
             <p>ACTIVITY</p>
+            <p>When user joins</p>
+            <p>When documents get uploaded</p>
+            <p>When user leaves</p>
         </div>
     )
 };

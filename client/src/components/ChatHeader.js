@@ -5,13 +5,14 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useState } from 'react';
 import Axios from 'axios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { CurrentServerContext } from "../global/contexts";
+import { CurrentServerContext, UserEmailContext } from "../global/contexts";
 import { useContext } from "react";
 
 const ChatHeader = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [addedUser, setAddedUser] = useState('');
+    const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     const open = Boolean(anchorEl);
     const id = open ? 'popover' : undefined;
@@ -42,7 +43,7 @@ const ChatHeader = () => {
             <Box sx={{ flexGrow: 1, width: "100%"}}>
                 <AppBar className={classes.bar} sx={{ backgroundColor: "#393941"}} position="relative" elevation={2}>
                     <Toolbar>
-                        <Typography style={{ flex: 1}}>CHAT HEADER</Typography>
+                        <Typography style={{ flex: 1}}>{currentServer ? currentServer : "NO SERVER"}</Typography>
                         <Link sx={{ flex: 1 }} to="/">Test</Link>
                         <IconButton onClick={(e) => handlePopover(e)} aria-describedby={id}>
                             <PersonAddIcon/>
