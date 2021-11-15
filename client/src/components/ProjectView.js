@@ -6,7 +6,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton } from "@mui/material";
 import ChatHeader from "./ChatHeader";
 import io from 'socket.io-client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserEmailContext } from "../global/contexts";
     
 const socket = io.connect('http://localhost:3002/');
 
@@ -16,16 +17,16 @@ const ProjectView = () => {
     const [message, setMessage] = useState('');
     const [allChat, setAllChat] = useState([]);
     const [update, setUpdate] = useState(false);
+    const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     let chatArr = [];
 
     // logs message in terminal //
     useEffect(() => {
         console.log('ran');
         socket.on("message", (msg) => {
-            console.log(msg);
-            setAllChat([...allChat, msg]);
+            setAllChat((_messages) => [..._messages, msg]);
         });
-    },[update]);
+    },[]);
         
     // Joins test room //
     useEffect(() =>  {
@@ -39,9 +40,11 @@ const ProjectView = () => {
     }
 
     const renderChat = () => {
+        console.log(allChat);
         return allChat.map((string, idx) => {
             return(
                 <div>
+                    
                     <p key={idx}>{string}</p>
                 </div>
             )
@@ -55,6 +58,7 @@ const ProjectView = () => {
             <div className={classes.chat}>
                 <p>test</p>
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
+                {renderChat()}
             </div>
             <div className={classes.chatContainer}>
                 <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} onChange={(e) => setMessage(e.target.value)} startAdornment={<IconButton><AddCircleIcon className={classes.icon}/></IconButton>}/>
