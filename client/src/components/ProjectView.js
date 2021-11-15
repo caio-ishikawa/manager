@@ -1,13 +1,14 @@
 import { ClassNames } from "@emotion/react";
 import { makeStyles } from "@mui/styles";
 import TextField from '@mui/material/TextField';
-import { InputBase, Button } from "@mui/material";
+import { InputBase, Button, Avatar, Divider} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { IconButton } from "@mui/material";
+import { IconButton, Grid } from "@mui/material";
 import ChatHeader from "./ChatHeader";
 import io from 'socket.io-client';
 import { useEffect, useState, useContext } from 'react';
 import { UserEmailContext, CurrentServerContext } from "../global/contexts";
+import def_profile from '../assets/def_profile.png';
 import Axios from 'axios';
     
 const socket = io.connect('http://localhost:3002/');
@@ -53,31 +54,27 @@ const ProjectView = () => {
         return allChat.map((string, idx) => {
             return(
                 <div>
-                    
-                    <p key={idx}>{string.email}: {string.message}</p>
+                    <Grid container justify="center" spacing={-26}>
+                        <Grid className={classes.pic} item sm={1.5} md={1.5} lg={1.5}>
+                            <Avatar sx={{ height: "5vh", width: "5vh", marginBottom: "2vh", marginTop: "1.5vh"}} alt={string.email} src={def_profile}/>
+                        </Grid>
+                        <Grid item sm={10} md={9} lg={9}>
+                            <p key={idx}>{string.email}</p>
+                            <p key={idx}>{string.message}</p>
+                        </Grid>
+                    </Grid>
+                    <hr color="#555562" className={classes.divider}/>
                 </div>
             )
         })
     };
 
-    // Adds user to current server (PLACEHOLDER) //
-    const addUser = () => {
-        let data = {
-            email: addedUsername,
-            server: currentServer
-        };
-        Axios.post('http://localhost:3002/post/add_user', data)
-            .then((res) => console.log(res));
-    }
 
     return(
         <div className={classes.box}>
             <br></br>
             <p>PROJECT</p>
             <div className={classes.chat}>
-                <p>test</p>
-                <input placholder="username" onChange={(e) => setAddedUsername(e.target.value)}/>
-                <Button onClick={() => addUser()}>Add user</Button>
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
                 {allChat ? renderChat() : console.log('no chat')} 
             </div>
@@ -128,14 +125,27 @@ const useStyles = makeStyles({
     },
       '@global': {
     '*::-webkit-scrollbar': {
-      width: '0.4em'
+      width: '0.6em',
+      borderRadius: "10px"
     },
     '*::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.40)'
     },
     '*::-webkit-scrollbar-thumb': {
       backgroundColor: 'rgba(0,0,0,.4)',
-      outline: '1px solid slategrey'
+      outline: '1px solid slategrey',
+      borderRadius: "10px"
+    },
+    pic: {
+        borderRadius: "10%",
+        overflow: "hidden",
+        display: "block",
+        alignItems: "center"
+    },
+    divider: {
+        color: "black",
+        width: "20%",
+        margin: "0 auto"
     }
   }
 });

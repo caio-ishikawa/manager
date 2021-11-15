@@ -43,7 +43,6 @@ io.on('connection', socket => {
         console.log("you have joined", roomName);
     });
     socket.on("message", ({ message, email, room}) => {
-        console.log(typeof room);
         io.sockets.in(room).emit('message', {message, email});
     })
 })
