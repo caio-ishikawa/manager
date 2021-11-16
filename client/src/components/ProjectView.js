@@ -26,9 +26,8 @@ const ProjectView = () => {
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     let chatArr = [];
 
-    // Listens to new messages //
+    // Listens for socket events //
     useEffect(() => {
-        console.log('ran');
         socket.on("message", ({ message, email}) => {
             setAllChat((_messages) => [ ..._messages, { email, message }])
         });
@@ -46,7 +45,7 @@ const ProjectView = () => {
         })
     },[]);
         
-    // Joins desired server //
+    // Joins desired server based on the currentServer context //
     useEffect(() =>  {
         socket.emit("swap servers", ({email: globalEmail}));
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
@@ -67,14 +66,24 @@ const ProjectView = () => {
 
     // Sends message to desired server //
     const sendMessage = (e) => {
+        // Emits message to socket //
         console.log("SENDING MESSAGE: ", message);
         socket.emit('message', ({ message: message, email: globalEmail, room: currentServer }));
         socket.emit("stopped typing", ({ room: currentServer, email: globalEmail}));
         e.preventDefault();
         setMessage('');
+
+        //Sends data to Chat model //
+        let data = {
+            email: globalEmail,
+            server: currentServer,
+            message: message
+        };
+        Axios.post('http://localhost:3002/post/chat', data)
+            .then((res) => console.log(res));
     };
 
-    // Renders chat on display //
+    // Renders live chat on display //
     const renderChat = () => {
         //console.log(allChat);
         return allChat.map((string, idx) => {

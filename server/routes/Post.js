@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Server = require('../models/Server');
 const User = require('../models/User');
+const Chat = require('../models/Chat');
 const { emailExists } = require('../utils/emailExists');
 
 
@@ -49,6 +50,25 @@ router.post('/add_user', async(req, res) => {
         const savedUSer = user.save();
         const savedServer = server.save();
         res.send(user);
+    }
+});
+
+router.post('/chat', async (req, res) => {
+    const email = req.body.email;
+    const server = req.body.server;
+    const message = req.body.message;
+
+    const newMessage = new Chat({
+        user: email,
+        message: message,
+        server: server
+    });
+
+    try{
+        const savedChat = await newMessage.save();
+        res.send(newMessage);
+    } catch(err) {
+        res.send(err);
     }
 });
 

@@ -59,7 +59,7 @@ io.on('connection', socket => {
     socket.on("stopped typing", ({ room, email }) => {
         io.sockets.in(room).emit("stopped typing", ({ email }));
     });
-    // SOCKET.leave ON SWAP SERVER //
+    // Leaves room before joining another //
     socket.on("swap servers", ( email ) => {
         console.log(email, "LEAVING SERVER: ", server_room);
         socket.leave(server_room);
