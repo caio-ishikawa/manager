@@ -48,6 +48,7 @@ io.on('connection', socket => {
     });
     // Send message to server //
     socket.on("message", ({ message, email, room}) => {
+        console.log(socket.id, "sent msg", message)
         io.sockets.in(room).emit('message', {message, email});
     });
     // Emit when user is typing //

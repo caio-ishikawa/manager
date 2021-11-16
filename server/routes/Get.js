@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Server = require('../models/Server');
 const User = require('../models/User');
+const Chat = require('../models/Chat');
 const { emailExists } = require('../utils/emailExists');
 
 // GET USER's SUBSCRIBED SERVERS //
@@ -32,6 +33,14 @@ router.post('/all_members', async (req, res) => {
         const serverUsers = server.members;
         res.send(server.members);
     }
-})
+});
+
+// Sends all chats pertaining to a specific server //
+router.post('/server_msgs', async (req, res) => {
+    const serverName = req.body.server;
+    
+    const chat = await Chat.find({ server: serverName });
+    res.send(chat);
+});
 
 module.exports = router;

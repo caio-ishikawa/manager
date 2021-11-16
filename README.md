@@ -7,3 +7,7 @@ Manager is a Discord-inspired collaboration desktop app, which allows users to c
 - Web Sockets for real-time chatting (Socket.io).
 - Multer for file uploads (YET TO DO).
 - AWS for storing images/files (YET TO DO).
+
+
+## KNOWN BUGS ##
+- Messages get rendered more than once sometimes (They are NOT getting sent multiple times to the DB, so it must be a rendering bug).

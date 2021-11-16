@@ -22,6 +22,7 @@ const ProjectView = () => {
     const [update, setUpdate] = useState(false);
     const [typing, setTyping] = useState(false);
     const [whoTyping, setWhoTyping] = useState('');
+    const [serverMessages, setServerMessages] = useState([]);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     let chatArr = [];
@@ -42,7 +43,9 @@ const ProjectView = () => {
         });
         socket.on("swap servers", (server_room) => {
             console.log("CLIENT SIDE HAS LEFT SERVER: ", server_room);
-        })
+        });
+
+        return () => { socket.off("message")};
     },[]);
         
     // Joins desired server based on the currentServer context //
@@ -50,6 +53,12 @@ const ProjectView = () => {
         socket.emit("swap servers", ({email: globalEmail}));
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
         socket.emit("join", ({roomName: currentServer ? currentServer : "test", email: globalEmail}));
+
+        // gets messages //
+        Axios.post('http://localhost:3002/get/server_msgs', {server: currentServer})
+            .then((res) => {
+                setServerMessages(res.data)
+            })
     }, [currentServer]);
 
     // Sets message state based on user's input and emits typing event to socket //
@@ -83,9 +92,31 @@ const ProjectView = () => {
             .then((res) => console.log(res));
     };
 
+    const renderOldChat = () => {
+        console.log(serverMessages);
+        return serverMessages.map((string, idx) => {
+            return(
+                <div>
+                <Grid key={idx} container justify="center" spacing={-26}>
+                    <Grid className={classes.pic} item sm={1.5} md={1.5} lg={1.5}>
+                        <Avatar sx={{ height: "5vh", width: "5vh", marginBottom: "2vh", marginTop: "1.5vh"}} alt={string.user} src={def_profile}/>
+                    </Grid>
+                    <Grid item sm={10} md={9} lg={9}>
+                        <div>
+                            <p>{string.user}:</p>
+                            <p>{string.message}</p>
+                        </div>
+                    </Grid>
+                </Grid>
+                <hr color="#555562" className={classes.divider}/>
+            </div> 
+        )
+        })
+    };
+
     // Renders live chat on display //
     const renderChat = () => {
-        //console.log(allChat);
+        console.log(allChat);
         return allChat.map((string, idx) => {
             return(
                 <div>
@@ -112,6 +143,7 @@ const ProjectView = () => {
             <br></br>
             <div className={classes.chat}>
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
+                {serverMessages ? renderOldChat() : console.log('no old chat')}
                 {allChat ? renderChat() : console.log('no chat')} 
             </div>
             {typing ?
