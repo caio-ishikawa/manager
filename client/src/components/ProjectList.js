@@ -50,8 +50,8 @@ const ProjectList = () => {
             {serverList ?
             serverList.map((content, idx) => (
                 <div key={idx} className={classes.serverIcon} onClick={() => setCurrentServer(content)}>
-                    <Tooltip title={content} placement="right">
-                        <Avatar sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
+                    <Tooltip key={idx} title={content} placement="right">
+                        <Avatar key={idx} sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
                     </Tooltip>
                 </div>
                 

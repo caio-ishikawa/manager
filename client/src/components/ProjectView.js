@@ -1,7 +1,7 @@
 import { ClassNames } from "@emotion/react";
 import { makeStyles } from "@mui/styles";
 import TextField from '@mui/material/TextField';
-import { InputBase, Button, Avatar, Divider, Tooltip} from "@mui/material";
+import { InputBase, Button, Avatar, Divider, Tooltip, Typography} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton, Grid } from "@mui/material";
 import ChatHeader from "./ChatHeader";
@@ -20,6 +20,8 @@ const ProjectView = () => {
     const [allChat, setAllChat] = useState([]);
     const [addedUsername, setAddedUsername] = useState('');
     const [update, setUpdate] = useState(false);
+    const [typing, setTyping] = useState(false);
+    const [whoTyping, setWhoTyping] = useState('');
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     let chatArr = [];
@@ -28,21 +30,46 @@ const ProjectView = () => {
     useEffect(() => {
         console.log('ran');
         socket.on("message", ({ message, email}) => {
-            //setAllChat({ ...allChat, [msg.email]: msg.message});
             setAllChat((_messages) => [ ..._messages, { email, message }])
         });
+        socket.on("typing", ({ email }) => {
+            if (email != globalEmail) {
+                setTyping(true);
+                setWhoTyping(email);
+            }
+        });
+        socket.on("stopped typing", ({ email }) => {
+            setTyping(false);
+        });
+        socket.on("swap servers", (server_room) => {
+            console.log("CLIENT SIDE HAS LEFT SERVER: ", server_room);
+        })
     },[]);
         
     // Joins desired server //
     useEffect(() =>  {
+        socket.emit("swap servers", ({email: globalEmail}));
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
-        socket.emit("join", (currentServer ? currentServer : "test"));
+        socket.emit("join", ({roomName: currentServer ? currentServer : "test", email: globalEmail}));
     }, [currentServer]);
+
+    // Sets message state based on user's input and emits typing event to socket //
+    const userTyping = (e) => {
+        setMessage(e.target.value);
+
+        if (e.target.value.length > 0) {
+            socket.emit("typing", ({ room: currentServer, email: globalEmail }));
+        } else {
+            socket.emit("stopped typing", ({ room: currentServer, email: globalEmail}));
+            setTyping(false);
+        }
+    };
 
     // Sends message to desired server //
     const sendMessage = (e) => {
         console.log("SENDING MESSAGE: ", message);
         socket.emit('message', ({ message: message, email: globalEmail, room: currentServer }));
+        socket.emit("stopped typing", ({ room: currentServer, email: globalEmail}));
         e.preventDefault();
         setMessage('');
     };
@@ -78,8 +105,14 @@ const ProjectView = () => {
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
                 {allChat ? renderChat() : console.log('no chat')} 
             </div>
+            {typing ?
+                <Typography variant="body">{whoTyping} is typing...</Typography>
+                :
+                <p></p>
+            }
             <div className={classes.chatContainer}>
-                <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={message} onChange={(e) => setMessage(e.target.value)} startAdornment={<IconButton><AddCircleIcon className={classes.icon}/></IconButton>}/>
+             
+                <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={message} onChange={(e) => userTyping(e)} startAdornment={<IconButton><AddCircleIcon className={classes.icon}/></IconButton>}/>
             </div>
         </div>
     )
