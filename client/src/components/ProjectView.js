@@ -7,14 +7,14 @@ import { IconButton, Grid } from "@mui/material";
 import ChatHeader from "./ChatHeader";
 import io from 'socket.io-client';
 import { useEffect, useState, useContext } from 'react';
-import { UserEmailContext, CurrentServerContext } from "../global/contexts";
+import { UserEmailContext, CurrentServerContext, SocketContext } from "../global/contexts";
 import def_profile from '../assets/def_profile.png';
 import Axios from 'axios';
     
-const socket = io.connect('http://localhost:3002/');
 
-const ProjectView = () => {
-    //console.log("SOCKET: ", socket)
+const ProjectView = (props) => {
+    const socket = props.socket;
+    console.log("SOCKET: ", socket)
     const classes = useStyles();
     const [message, setMessage] = useState('');
     const [allChat, setAllChat] = useState([]);
@@ -25,7 +25,6 @@ const ProjectView = () => {
     const [serverMessages, setServerMessages] = useState([]);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
-    let chatArr = [];
 
     // Listens for socket events //
     useEffect(() => {

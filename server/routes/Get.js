@@ -43,4 +43,11 @@ router.post('/server_msgs', async (req, res) => {
     res.send(chat);
 });
 
+router.post('/updates', async(req, res) => {
+    const serverName = req.body.server;
+
+    const server = await Server.findOne({ name: serverName });
+    res.send(server.updates);
+});
+
 module.exports = router;

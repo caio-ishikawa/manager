@@ -2,13 +2,13 @@ import { Typography, Toolbar, AppBar, Box, IconButton, Popover, InputBase } from
 import { makeStyles } from "@mui/styles";
 import { Link } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { CurrentServerContext, UserEmailContext } from "../global/contexts";
-import { useContext } from "react";
+import { CurrentServerContext, UserEmailContext, SocketContext } from "../global/contexts";
 
-const ChatHeader = () => {
+const ChatHeader = (props) => {
+    const socket = props.socket;
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [addedUser, setAddedUser] = useState('');
@@ -32,7 +32,11 @@ const ChatHeader = () => {
                 server: currentServer
             };
             Axios.post('http://localhost:3002/post/add_user', data)
-                .then((res) => console.log(res));
+                .then((res) => {
+                    if (res.data === "User added") {
+                        socket.emit("added", ({ room: currentServer, email: addedUser}));
+                    }
+                });
         } else {
             alert("Please write the user's email.")
         }

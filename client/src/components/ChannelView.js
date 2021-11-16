@@ -26,22 +26,25 @@ const ChannelView = () => {
     return(
         <div className={classes.box}>
             <br></br>
-            { allMembers ?
-            allMembers.map((name, idx) => (
-                <div className={classes.userView}>
-                    <Grid container spacing={0}>
-                        <Grid item sm={3} md={2} lg={2}>
-                            <Avatar src={def_profile} sx={{ height: "3vh", width: "3vh", marginBottom: "2vh" }}/>
+            <Typography className={classes.title} variant="h5">Users</Typography>
+            <div className={classes.users}>
+                { allMembers ?
+                allMembers.map((name, idx) => (
+                    <div className={classes.userView}>
+                        <Grid container spacing={0}>
+                            <Grid item sm={3} md={2} lg={2}>
+                                <Avatar src={def_profile} sx={{ height: "3vh", width: "3vh", marginBottom: "2vh" }}/>
+                            </Grid>
+                            <Grid item sm={9} md={10} lg={10}>
+                                <Typography key={idx}>{name}</Typography>
+                            </Grid>
                         </Grid>
-                        <Grid item sm={9} md={10} lg={10}>
-                            <Typography key={idx}>{name}</Typography>
-                        </Grid>
-                    </Grid>
-                </div>
-            ))
-            :
-            <Typography>No members in this server</Typography>
-            }
+                    </div>
+                ))
+                :
+                <Typography>No members in this server</Typography>
+                }
+            </div>
         </div>
     )
 
@@ -58,6 +61,13 @@ const useStyles = makeStyles({
     userView: {
         width: "90%",
         margin: "auto"
+    },
+    title: {
+        textAlign: "center",
+        marginBottom: "2vh"
+    },
+    users: {
+        marginTop: "2vh"
     }
 });
 

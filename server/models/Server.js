@@ -18,7 +18,10 @@ const ServerSchema = new mongoose.Schema({
     }],
     created_by: {
         type:String,
-    }
+    },
+    updates: [{
+        type: String
+    }]
 });
 
 module.exports = mongoose.model("Server", ServerSchema);

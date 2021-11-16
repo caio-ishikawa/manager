@@ -9,7 +9,10 @@ import ActivityViewHeader from '../components/ActivityViewHeader';
 import ChannelViewHeader from '../components/ChannelViewHeader';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { UserEmailContext } from '../global/contexts';
+import { UserEmailContext, SocketContext } from '../global/contexts';
+import io from 'socket.io-client';
+
+const socket = io.connect('http://localhost:3002/');
 
 const Main = () => {
     const classes = useStyles();
@@ -25,11 +28,11 @@ const Main = () => {
                 </Grid>
                 <Grid item sm={2} md={2.6} lg={2.3}>
                     <ActivityViewHeader/>
-                    <ActivityGrid/>
+                    <ActivityGrid socket={socket}/>
                 </Grid>
                 <Grid item sm={7} md={6.5} lg={6.9}>
-                    <ChatHeader/>
-                    <ProjectView/> 
+                    <ChatHeader socket={socket}/>
+                    <ProjectView socket={socket}/> 
                 </Grid>
                 <Grid item sm={2} md={2.3} lg={2.2}>
                     <ChannelViewHeader/>

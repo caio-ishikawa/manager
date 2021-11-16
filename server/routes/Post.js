@@ -49,7 +49,7 @@ router.post('/add_user', async(req, res) => {
         const updatedServer = server.members.push(email);
         const savedUSer = user.save();
         const savedServer = server.save();
-        res.send(user);
+        res.send("User added");
     }
 });
 
@@ -72,5 +72,19 @@ router.post('/chat', async (req, res) => {
     }
 });
 
+router.post('/update', async (req, res) => {
+    const serverName = req.body.server;
+    const update = req.body.update
+
+    const server = await Server.findOne({ name: serverName });
+    try {
+        const updatedServer = server.updates.push(update);
+        const savedServer = server.save();
+        res.send("Update successfully stored.");
+    } catch(err) {
+        res.send(err);
+    }
+
+});
 
 module.exports = router;
