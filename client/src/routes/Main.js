@@ -5,6 +5,7 @@ import ProjectView from '../components/ProjectView';
 import ChannelView from '../components/ChannelView';
 import ActivityGrid from '../components/ActivityView';
 import ChatHeader from '../components/ChatHeader';
+import ActivityViewHeader from '../components/ActivityViewHeader';
 import ChannelViewHeader from '../components/ChannelViewHeader';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
@@ -23,6 +24,7 @@ const Main = () => {
                     <ProjectList/> 
                 </Grid>
                 <Grid item sm={2} md={2.6} lg={2.3}>
+                    <ActivityViewHeader/>
                     <ActivityGrid/>
                 </Grid>
                 <Grid item sm={7} md={6.5} lg={6.9}>

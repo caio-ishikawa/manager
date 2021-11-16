@@ -64,6 +64,11 @@ io.on('connection', socket => {
     socket.on("swap servers", ( email ) => {
         console.log(email, "LEAVING SERVER: ", server_room);
         socket.leave(server_room);
+    });
+    // Emits when user is added to server //
+    socket.on("added", ({ room, email}) => {
+        console.log(email, "has been added to: ", room);
+        io.sockets.in(room).emit("added", ({ email }));
     })
 })
 

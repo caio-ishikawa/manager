@@ -1,4 +1,5 @@
 import { makeStyles } from "@mui/styles";
+import io from 'socket.io-client';
 
 const ActivityGrid = () => {
     const classes = useStyles();
