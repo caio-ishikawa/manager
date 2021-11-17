@@ -5,8 +5,8 @@ Manager is a Discord-inspired collaboration desktop app, which allows users to c
 ## Technologies ##
 - MERN (MongoDB, Express, ReactJS, NodeJS).
 - Web Sockets for real-time chatting (Socket.io).
-- Multer for file uploads (YET TO DO).
-- AWS for storing images/files (YET TO DO).
+- Multer for file uploads.
+- AWS for storing images/files.
 
 
 ## KNOWN BUGS ##
