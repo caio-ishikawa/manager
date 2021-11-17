@@ -3,6 +3,9 @@ const Server = require('../models/Server');
 const User = require('../models/User');
 const Chat = require('../models/Chat');
 const { emailExists } = require('../utils/emailExists');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/'});
+const { uploadFile } = require('../s3'); 
 
 
 router.post('/add_server', async(req, res) => {
@@ -87,6 +90,14 @@ router.post('/update', async (req, res) => {
         res.send(err);
     }
 
+});
+
+router.post('/file', upload.single('file'), async (req, res) => {
+    // NEEDS ERROR HANDLING //
+    const file = req.file;
+    console.log(file);
+    const fileUpload = await uploadFile(file);
+    res.send(fileUpload);
 });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 import { ClassNames } from "@emotion/react";
 import { makeStyles } from "@mui/styles";
 import TextField from '@mui/material/TextField';
-import { InputBase, Button, Avatar, Divider, Tooltip, Typography} from "@mui/material";
+import { InputBase, Button, Avatar, Divider, Tooltip, Typography, Popover} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton, Grid } from "@mui/material";
 import ChatHeader from "./ChatHeader";
@@ -25,6 +25,8 @@ const ProjectView = (props) => {
     const [serverMessages, setServerMessages] = useState([]);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
+    const [file, setFile] = useState('');
+    
 
     // Listens for socket events //
     useEffect(() => {
@@ -46,7 +48,9 @@ const ProjectView = (props) => {
 
         return () => { socket.off("message")};
     },[]);
+    // -------------------------------- //
         
+
     // Joins desired server based on the currentServer context //
     useEffect(() =>  {
         socket.emit("swap servers", ({email: globalEmail}));
@@ -59,6 +63,8 @@ const ProjectView = (props) => {
                 setServerMessages(res.data)
             })
     }, [currentServer]);
+    // -------------------------------- //
+
 
     // Sets message state based on user's input and emits typing event to socket //
     const userTyping = (e) => {
@@ -71,6 +77,8 @@ const ProjectView = (props) => {
             setTyping(false);
         }
     };
+    // -------------------------------- //
+
 
     // Sends message to desired server //
     const sendMessage = (e) => {
@@ -90,7 +98,10 @@ const ProjectView = (props) => {
         Axios.post('http://localhost:3002/post/chat', data)
             .then((res) => console.log(res));
     };
+    // -------------------------------- //
 
+
+    // Renders old chat data //
     const renderOldChat = () => {
         console.log(serverMessages);
         return serverMessages.map((string, idx) => {
@@ -112,6 +123,8 @@ const ProjectView = (props) => {
         )
         })
     };
+    // -------------------------------- //
+
 
     // Renders live chat on display //
     const renderChat = () => {
@@ -135,7 +148,28 @@ const ProjectView = (props) => {
             )
         })
     };
+    // -------------------------------- //
 
+
+    // POPOVER CONTROLS //
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const id = open ? 'popover' : undefined; 
+    const openPopover = (e) => {
+        setAnchorEl(e.currentTarget);
+    };
+    const closePopover = () => {
+        setAnchorEl(null);
+    };
+    // -------------------------------- //
+
+
+    const submitFile = () => {
+        const fileData = new FormData();
+        fileData.append('file', file);
+        Axios.post('http://localhost:3002/post/file', fileData)
+            .then((res) => console.log(res));
+    }
 
     return(
         <div className={classes.box}>
@@ -152,8 +186,23 @@ const ProjectView = (props) => {
             }
             <div className={classes.chatContainer}>
              
-                <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={message} onChange={(e) => userTyping(e)} startAdornment={<IconButton><AddCircleIcon className={classes.icon}/></IconButton>}/>
+                <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={message} onChange={(e) => userTyping(e)} startAdornment={<IconButton aria-describedby={id} onClick={(e) => openPopover(e)}><AddCircleIcon className={classes.icon}/></IconButton>}/>
             </div>
+
+            {/* POPOVER  */}
+            <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={closePopover}
+            anchorOrigin={{
+                vertical: -32,
+                horizontal: 4 
+            }}
+            >
+                <input type="file" onChange={(e) => setFile(e.target.files[0])}/>
+                <Button onClick={() => submitFile()}>Submit</Button>
+            </Popover>
         </div>
     )
 
