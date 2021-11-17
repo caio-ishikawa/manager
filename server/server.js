@@ -69,7 +69,7 @@ io.on('connection', socket => {
     socket.on("added", ({ room, email}) => {
         console.log(email, "has been added to: ", room);
         io.sockets.in(room).emit("added", ({ email }));
-    })
+    });
 })
 
 // SERVER LISTEN //

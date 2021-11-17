@@ -2,10 +2,11 @@ const router = require('express').Router();
 const Server = require('../models/Server');
 const User = require('../models/User');
 const Chat = require('../models/Chat');
+const File = require('../models/File');
 const { emailExists } = require('../utils/emailExists');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/'});
-const { uploadFile } = require('../s3'); 
+const { uploadFile } = require('../utils/s3'); 
 
 
 router.post('/add_server', async(req, res) => {
@@ -95,9 +96,30 @@ router.post('/update', async (req, res) => {
 router.post('/file', upload.single('file'), async (req, res) => {
     // NEEDS ERROR HANDLING //
     const file = req.file;
-    console.log(file);
+    const email = req.body.user;
+    const serverName = req.body.server;
+    
+
+    // Uploads to S3 bucket //
     const fileUpload = await uploadFile(file);
-    res.send(fileUpload);
+    console.log(fileUpload)
+
+    // Uploads info to DB //
+    const newFile = new File({
+        name: file.originalname,
+        server: serverName,
+        key: fileUpload.Key,
+        uploaded_by: email
+    });
+
+    try {
+        const savedFile = await newFile.save();
+        res.send(newFile);
+        console.log(fileUpload);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
 });
 
 module.exports = router;

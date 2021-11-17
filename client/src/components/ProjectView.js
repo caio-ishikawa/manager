@@ -164,12 +164,17 @@ const ProjectView = (props) => {
     // -------------------------------- //
 
 
-    const submitFile = () => {
+    const submitFile =  async() => {
         const fileData = new FormData();
-        fileData.append('file', file);
-        Axios.post('http://localhost:3002/post/file', fileData)
-            .then((res) => console.log(res));
-    }
+        fileData.append('file', file)
+        fileData.append('user', globalEmail);
+        fileData.append('server', currentServer);
+        console.log(fileData.getAll('server'));
+
+        const result = await Axios.post('http://localhost:3002/post/file', fileData , { headers: {'Content-Type': 'multipart/form-data'}});
+        console.log(result);
+      
+    };
 
     return(
         <div className={classes.box}>

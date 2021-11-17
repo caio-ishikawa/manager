@@ -56,4 +56,9 @@ router.post('/updates', async(req, res) => {
     }
 });
 
+router.post('/file', async(req, res) => {
+    const fileKey = req.body.fileKey;
+    console.log(fileKey);
+});
+
 module.exports = router;

@@ -1,0 +1,22 @@
+# Coding Notes
+
+This function prints the variable that is inserted in the function.
+### javascript:
+```js
+const printStr = (var) => {
+    console.log(var);
+};
+printStr('test');
+// result: 'test'
+```
+This one, on the other hand, returns the sum of the numbers that are inserted in the function.
+
+### python:
+```py
+def addNums(num1, num2):
+    res = num1 + num2
+    return res
+
+print(addNums(1, 3));
+# result: 4
+```
