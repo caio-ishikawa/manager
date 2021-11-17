@@ -51,7 +51,7 @@ const ProjectView = (props) => {
     useEffect(() =>  {
         socket.emit("swap servers", ({email: globalEmail}));
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
-        socket.emit("join", ({roomName: currentServer ? currentServer : "test", email: globalEmail}));
+        socket.emit("join", ({roomName: currentServer ? currentServer : "placeholder", email: globalEmail}));
 
         // gets messages //
         Axios.post('http://localhost:3002/get/server_msgs', {server: currentServer})

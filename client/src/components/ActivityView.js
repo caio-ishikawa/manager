@@ -19,7 +19,7 @@ const ActivityGrid = ( props ) => {
         });
         Axios.post('http://localhost:3002/get/updates', { server: currentServer })
             .then((res) => setAllUpdates(res.data));
-    },[]);
+    },[currentServer]);
 
     // Posts update to DB //
     useEffect(() => {
@@ -33,7 +33,7 @@ const ActivityGrid = ( props ) => {
         } else {
             console.log("NO UPDATES");
         }
-    }, [update, currentServer])
+    }, [update])
 
     const renderUpdates = () => {
         return allUpdates.map((upd, idx) => {
@@ -52,7 +52,7 @@ const ActivityGrid = ( props ) => {
         <div className={classes.box}>
             <br></br>
             <Typography className={classes.title} variant="h5">Activity</Typography>
-            {allUpdates.length > 0 ? 
+            {allUpdates != "No updates" && typeof allUpdates != 'string' ? 
             renderUpdates()
             :
             <p>NO UPDATES YET</p>

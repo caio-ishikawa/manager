@@ -21,7 +21,7 @@ const ProjectList = () => {
             .then((res) => {
                 setServerList(res.data);
             });
-    }, [serverList]);
+    }, []);
 
     // Changes server context //
     const swapServer = (content) => {
@@ -47,7 +47,7 @@ const ProjectList = () => {
     return (
         <div className={classes.box}>
             <br></br>
-            {serverList ?
+            {serverList != "User not in any server" && typeof serverList != 'string'?
             serverList.map((content, idx) => (
                 <div key={idx} className={classes.serverIcon} onClick={() => setCurrentServer(content)}>
                     <Tooltip key={idx} title={content} placement="right">

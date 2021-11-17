@@ -44,12 +44,14 @@ router.post('/add_user', async(req, res) => {
     const server = await Server.findOne({ name: serverName });
     if (!user) {
         res.status(400).send("No user found");
-    } else {
+    } else if (!server.members.includes(user)) {
         const updatedUser = user.servers.push(serverName);
         const updatedServer = server.members.push(email);
         const savedUSer = user.save();
         const savedServer = server.save();
         res.send("User added");
+    } else {
+        res.status(301).send("User already invited");
     }
 });
 
