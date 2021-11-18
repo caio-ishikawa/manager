@@ -10,6 +10,8 @@ import { useEffect, useState, useContext } from 'react';
 import { UserEmailContext, CurrentServerContext, SocketContext } from "../global/contexts";
 import def_profile from '../assets/def_profile.png';
 import Axios from 'axios';
+import { renderChat } from "../utils/renderChat";
+import { renderOldChat } from '../utils/renderOldChat';
     
 
 const ProjectView = (props) => {
@@ -102,75 +104,6 @@ const ProjectView = (props) => {
     };
     // -------------------------------- //
 
-
-    // Renders old chat data //
-    const renderOldChat = () => {
-        console.log("SERVER MESSAGES: ", serverMessages);
-        return serverMessages.map((string, idx) => {
-            return(
-                <div>
-                <Grid key={idx} container justify="center" spacing={-26}>
-                    <Grid className={classes.pic} item sm={1.5} md={1.5} lg={1.5}>
-                        <Avatar sx={{ height: "5vh", width: "5vh", marginBottom: "2vh", marginTop: "1.5vh"}} alt={string.user} src={def_profile}/>
-                    </Grid>
-                    <Grid item sm={10} md={9} lg={9}>
-                        <div>
-                        { string.message ? 
-                                <div>
-                                    <p>{string.user}:</p>
-                                    <p>{string.message}</p>
-                                </div>
-                                :
-                                <div key={idx}>
-                                    <p>{string.user}:</p>
-                                    <img alt={string.user} style={{ maxHeight: "25vh"}} src={"https://manager-io-app.s3.amazonaws.com/" + string.file_key}/>
-                                </div>
-                            }
-                        </div>
-                    </Grid>
-                </Grid>
-                <hr color="#555562" className={classes.divider}/>
-            </div> 
-        )
-        })
-    };
-    // -------------------------------- //
-
-
-    // Renders live chat on display //
-    const renderChat = () => {
-        console.log("ALL CHAT: ", allChat)
-        return allChat.map((string, idx) => {
-            return(
-                <div>
-                    <Grid container justify="center" spacing={-26}>
-                        <Grid className={classes.pic} item sm={1.5} md={1.5} lg={1.5}>
-                            <Avatar sx={{ height: "5vh", width: "5vh", marginBottom: "2vh", marginTop: "1.5vh"}} alt={string.email} src={def_profile}/>
-                        </Grid>
-                        <Grid item sm={10} md={9} lg={9}>
-                            <div key={idx}>
-                                { string.message ? 
-                                <div>
-                                    <p>{string.email}:</p>
-                                    <p>{string.message}</p>
-                                </div>
-                                :
-                                <div key={idx}>
-                                    <p>{string.user}:</p>
-                                    <img alt={string.user} src={"https://manager-io-app.s3.amazonaws.com/" + string.key}/>
-                                </div>
-                                }
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <hr color="#555562" className={classes.divider}/>
-                </div>
-            )
-        })
-    };
-    // -------------------------------- //
-
-
     // POPOVER CONTROLS //
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -209,8 +142,8 @@ const ProjectView = (props) => {
             <br></br>
             <div className={classes.chat}>
                 <Button onClick={(e) => sendMessage(e)}>test</Button>
-                {serverMessages ? renderOldChat() : console.log('no old chat')}
-                {allChat ? renderChat() : console.log('no chat')} 
+                {serverMessages ? renderOldChat(serverMessages) : console.log('no old chat')}
+                {allChat ? renderChat(allChat) : console.log('no chat')} 
             </div>
             {typing ?
                 <Typography variant="body">{whoTyping} is typing...</Typography>
