@@ -16,3 +16,9 @@ TODO:
 
 ## KNOWN BUGS ##
 - ~~Messages get rendered more than once sometimes (They are NOT getting sent multiple times to the DB, so it must be a rendering bug)~~ (FIXED)
+
+### TODO: ###
+- Refactor ProjectView.
+- Profile route.
+- Replace activity view with voice chat.
+
