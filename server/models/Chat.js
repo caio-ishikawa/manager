@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const ChatSchema = new mongoose.Schema({
     message: {
         type: String, 
-        required: true
     },
     user: {
         type: String, 
@@ -13,6 +12,9 @@ const ChatSchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: () => Date.now()
+    },
+    file_key: {
+        type: String,
     },
     server: {
         type: String,

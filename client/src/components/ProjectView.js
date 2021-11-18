@@ -26,6 +26,7 @@ const ProjectView = (props) => {
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     const [file, setFile] = useState('');
+    const [fileKey, setFileKey] = useState('');
     
 
     // Listens for socket events //
@@ -53,6 +54,7 @@ const ProjectView = (props) => {
 
     // Joins desired server based on the currentServer context //
     useEffect(() =>  {
+        setAllChat([]);
         socket.emit("swap servers", ({email: globalEmail}));
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
         socket.emit("join", ({roomName: currentServer ? currentServer : "placeholder", email: globalEmail}));
@@ -103,7 +105,7 @@ const ProjectView = (props) => {
 
     // Renders old chat data //
     const renderOldChat = () => {
-        console.log(serverMessages);
+        console.log("SERVER MESSAGES: ", serverMessages);
         return serverMessages.map((string, idx) => {
             return(
                 <div>
@@ -113,8 +115,17 @@ const ProjectView = (props) => {
                     </Grid>
                     <Grid item sm={10} md={9} lg={9}>
                         <div>
-                            <p>{string.user}:</p>
-                            <p>{string.message}</p>
+                        { string.message ? 
+                                <div>
+                                    <p>{string.user}:</p>
+                                    <p>{string.message}</p>
+                                </div>
+                                :
+                                <div key={idx}>
+                                    <p>{string.user}:</p>
+                                    <img alt={string.user} style={{ maxHeight: "25vh"}} src={"https://manager-io-app.s3.amazonaws.com/" + string.file_key}/>
+                                </div>
+                            }
                         </div>
                     </Grid>
                 </Grid>
@@ -128,7 +139,7 @@ const ProjectView = (props) => {
 
     // Renders live chat on display //
     const renderChat = () => {
-        console.log(allChat);
+        console.log("ALL CHAT: ", allChat)
         return allChat.map((string, idx) => {
             return(
                 <div>
@@ -138,8 +149,17 @@ const ProjectView = (props) => {
                         </Grid>
                         <Grid item sm={10} md={9} lg={9}>
                             <div key={idx}>
-                                <p>{string.email}:</p>
-                                <p>{string.message}</p>
+                                { string.message ? 
+                                <div>
+                                    <p>{string.email}:</p>
+                                    <p>{string.message}</p>
+                                </div>
+                                :
+                                <div key={idx}>
+                                    <p>{string.user}:</p>
+                                    <img alt={string.user} src={"https://manager-io-app.s3.amazonaws.com/" + string.key}/>
+                                </div>
+                                }
                             </div>
                         </Grid>
                     </Grid>
@@ -164,16 +184,24 @@ const ProjectView = (props) => {
     // -------------------------------- //
 
 
+    // Submits file to S3 bucket + its data to DB //
     const submitFile =  async() => {
         const fileData = new FormData();
         fileData.append('file', file)
         fileData.append('user', globalEmail);
         fileData.append('server', currentServer);
-        console.log(fileData.getAll('server'));
 
         const result = await Axios.post('http://localhost:3002/post/file', fileData , { headers: {'Content-Type': 'multipart/form-data'}});
-        console.log(result);
-      
+        try {
+            if (result.data.file_key != undefined) {
+                console.log("FILE RESULT: ", result)
+                let key = result.data.file_key;
+                setAllChat((_messages) => [ ..._messages, { globalEmail, key}]);
+                socket.emit("uploaded", ({ email: globalEmail, server: currentServer, fileName:result.data.name, fileKey: result.data.key}));
+            }
+        } catch (err) {
+            console.log(err);
+        }     
     };
 
     return(
@@ -273,6 +301,9 @@ const useStyles = makeStyles({
         color: "black",
         width: "20%",
         margin: "0 auto"
+    },
+    sentImg: {
+        height: 10,
     }
   }
 });

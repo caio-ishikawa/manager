@@ -10,4 +10,4 @@ Manager is a Discord-inspired collaboration desktop app, which allows users to c
 
 
 ## KNOWN BUGS ##
-- Messages get rendered more than once sometimes (They are NOT getting sent multiple times to the DB, so it must be a rendering bug).
+- ~~Messages get rendered more than once sometimes (They are NOT getting sent multiple times to the DB, so it must be a rendering bug)~~ (FIXED)

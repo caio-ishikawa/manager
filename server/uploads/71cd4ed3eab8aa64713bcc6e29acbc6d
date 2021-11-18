@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <p>base works</p>
+    
+<p>download</p>
+
+    <p>media/dry-clean.png</p>
+    <p>File object (2)</p>
+    <p>/Users/caioishikawa/django-apps/simple_dl/simple_dl/media/2</p>
+    <a href="" download="media/dry-clean.png">download</a>
+
+
+</body>
+</html>

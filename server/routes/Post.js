@@ -64,7 +64,8 @@ router.post('/chat', async (req, res) => {
     const server = req.body.server;
     const message = req.body.message;
 
-    const newMessage = new Chat({
+    // If file gets sent, save file to Chat model, else save message to Chat model //
+    let newMessage = new Chat({
         user: email,
         message: message,
         server: server
@@ -78,6 +79,7 @@ router.post('/chat', async (req, res) => {
     }
 });
 
+
 router.post('/update', async (req, res) => {
     const serverName = req.body.server;
     const update = req.body.update
@@ -88,9 +90,8 @@ router.post('/update', async (req, res) => {
         const savedServer = server.save();
         res.send("Update successfully stored.");
     } catch(err) {
-        res.send(err);
+        res.send("Error");
     }
-
 });
 
 router.post('/file', upload.single('file'), async (req, res) => {
@@ -98,26 +99,31 @@ router.post('/file', upload.single('file'), async (req, res) => {
     const file = req.file;
     const email = req.body.user;
     const serverName = req.body.server;
-    
 
     // Uploads to S3 bucket //
     const fileUpload = await uploadFile(file);
     console.log(fileUpload)
 
-    // Uploads info to DB //
-    const newFile = new File({
-        name: file.originalname,
-        server: serverName,
-        key: fileUpload.Key,
-        uploaded_by: email
+    // Uploads image key to Chat model //
+    let newImage = new Chat({
+        user: email,
+        file_key: fileUpload.Key,
+        server: serverName 
     });
 
     try {
-        const savedFile = await newFile.save();
-        res.send(newFile);
-        console.log(fileUpload);
+        let savedImg = await newImage.save();
     } catch (err) {
-        res.status(400).send(err);
+        res.send("Error");
+        console.log("IMAGE DID NOT SAVE TO CHAT MODEL")
+    }
+
+    try {
+        console.log(newImage);
+        res.send(newImage);
+    } catch (err) {
+        res.status(400).send("Error");
+        console.log("DID NOT WORK")
     }
 
 });

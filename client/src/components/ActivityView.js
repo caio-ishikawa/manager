@@ -1,7 +1,7 @@
 import { makeStyles } from "@mui/styles";
 import { SocketContext } from "../global/contexts";
 import { useContext, useEffect, useState } from 'react';
-import { CurrentServerContext } from "../global/contexts";
+import { CurrentServerContext, UserEmailContext } from "../global/contexts";
 import Axios from 'axios';
 import { Typography } from "@mui/material";
 
@@ -9,27 +9,47 @@ const ActivityGrid = ( props ) => {
     const socket = props.socket;
     const classes = useStyles();
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
+    const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [update, setUpdate] = useState('');
     const [allUpdates, setAllUpdates] = useState([]);
 
     // Listens for updates //
     useEffect(() => {
+        console.log("ACTIVITY VIEW LISTEINING")
         socket.on("added", ( email ) => {
+            console.log('added');
             setUpdate(email.email + ' has joined the server.');
         });
         Axios.post('http://localhost:3002/get/updates', { server: currentServer })
             .then((res) => setAllUpdates(res.data));
     },[currentServer]);
 
+    useEffect(() => {
+        socket.on("uploaded", ({ email, fileName, fileKey}) => {
+            if (fileName != undefined) {
+                console.log(fileName, fileKey);
+                setUpdate(email.email + 'has uploaded ' + fileName + ' to the server');
+            }
+        })
+    }, []);
+
     // Posts update to DB //
     useEffect(() => {
         if (update != "") {
+            console.log(update)
             let data = {
                 server: currentServer,
                 update: update
             };
             Axios.post("http://localhost:3002/post/update", data)
-                .then((res) => console.log(res));
+                .then((res) => {
+                    if (res.data === "Error") {
+                        console.log("UPDATE POSTING ERROR");
+                    } else {
+                        console.log("EMITTING UPLOAD TO SOCKET")
+                        socket.emit("uploaded", ({ room: currentServer, email: globalEmail, fileName: res.data.name, fileKey: res.data.key}));
+                    }
+                });
         } else {
             console.log("NO UPDATES");
         }
