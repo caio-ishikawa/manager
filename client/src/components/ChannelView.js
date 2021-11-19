@@ -32,14 +32,18 @@ const ChannelView = (props) => {
         online = [];
         socket.on("join", ({ email }) => {
             console.log(email, "is now online")
-            online.push(email);
-            setOnlineMembers((_online) => [..._online, email]);
+            if (!online.includes(email)) {
+                online.push(email);
+                setOnlineMembers(online);
+            }
         });
 
-        socket.on("disconnect", ({email}) => {
-            if (online.includes(email)) {
-                let index = online.indexOf(email);
+        socket.on("user left", (user) => {
+            console.log("CLIENT SIDE DISCONNECTING");
+            if (online.includes(user)) {
+                let index = online.indexOf(user);
                 online.splice(index, 1);
+                console.log("ONLINE ARRAY: ", online);
                 setOnlineMembers(online);
             }
         })
