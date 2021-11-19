@@ -71,7 +71,6 @@ const ActivityGrid = ( props ) => {
     return(
         <div className={classes.box}>
             <br></br>
-            <Typography className={classes.title} variant="h5">Activity</Typography>
             {allUpdates != "No updates" && typeof allUpdates != 'string' ? 
             renderUpdates()
             :

@@ -55,7 +55,6 @@ const ChannelView = (props) => {
     return(
         <div className={classes.box}>
             <br></br>
-            <Typography className={classes.title} variant="h5">Users</Typography>
             <div className={classes.users}>
                 { allMembers ?
                 allMembers.map((name, idx) => (

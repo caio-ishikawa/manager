@@ -10,7 +10,7 @@ const ChannelViewHeader = () => {
         <div>
             <AppBar sx={{ backgroundColor: "#393941"}} position="relative" elevation={2}>
                 <Toolbar>
-                    <Typography>CHANNEL VIEW HEADER</Typography>
+                    <Typography variant="h5">Members</Typography>
                 </Toolbar>
             </AppBar>
         </div>
