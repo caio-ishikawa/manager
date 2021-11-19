@@ -48,7 +48,7 @@ router.post('/add_user', async(req, res) => {
     const server = await Server.findOne({ name: serverName });
     if (!user) {
         res.status(400).send("No user found");
-    } else if (!server.members.includes(user)) {
+    } else if (!server.members.includes(email)) {
         const updatedUser = user.servers.push(serverName);
         const updatedServer = server.members.push(email);
         const savedUSer = user.save();
