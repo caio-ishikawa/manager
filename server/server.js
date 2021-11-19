@@ -40,10 +40,12 @@ mongoose.connect(secrets, (err) => {
 // ESTABLISHES SOCKET CONNECTIONS //
 io.on('connection', socket => {
     let server_room; 
+    var online_users = [];
     // Join server //
     socket.on("join", ({roomName, email}) => {
         socket.join(roomName);
         server_room = roomName
+        io.sockets.in(roomName).emit("join", ({email}));
         console.log(email, "has joined", roomName);
     });
     // Send message to server //
@@ -73,6 +75,10 @@ io.on('connection', socket => {
     socket.on("uploaded", ({ room, email, fileName, fileKey }) => {
         console.log(email, "has uploaded", fileName, "to server");
         io.sockets.in(room).emit("uploaded", ({ email, fileName, fileKey }));
+    });
+    socket.on("disconnect", ({ email }) => {
+        socket.broadcast.emit("user left", ({ email }));
+        console.log(email, " has disconnected");
     });
 
     

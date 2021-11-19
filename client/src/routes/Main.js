@@ -36,7 +36,7 @@ const Main = () => {
                 </Grid>
                 <Grid item sm={2} md={2.3} lg={2.2}>
                     <ChannelViewHeader/>
-                    <ChannelView/>
+                    <ChannelView socket={socket}/>
                 </Grid>
             </Grid>
         </div>
