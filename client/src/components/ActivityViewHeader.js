@@ -9,7 +9,7 @@ const ActivityViewHeader = () => {
         <div>
             <AppBar sx={{ backgroundColor: "#393941"}} position="relative" elevation={2}>
                 <Toolbar>
-                    <Typography>ACTIVITY VIEW HEADER</Typography>
+                    <Typography>VOICE CHAT</Typography>
                 </Toolbar>
             </AppBar>
         </div>

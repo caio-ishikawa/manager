@@ -13,70 +13,10 @@ const ActivityGrid = ( props ) => {
     const [update, setUpdate] = useState('');
     const [allUpdates, setAllUpdates] = useState([]);
 
-    // Listens for updates //
-    useEffect(() => {
-        console.log("ACTIVITY VIEW LISTEINING")
-        socket.on("added", ( email ) => {
-            console.log('added');
-            setUpdate(email.email + ' has joined the server.');
-        });
-        Axios.post('http://localhost:3002/get/updates', { server: currentServer })
-            .then((res) => setAllUpdates(res.data));
-    },[currentServer]);
-
-    useEffect(() => {
-        socket.on("uploaded", ({ email, fileName, fileKey}) => {
-            if (fileName != undefined) {
-                console.log(fileName, fileKey);
-                setUpdate(email.email + 'has uploaded ' + fileName + ' to the server');
-            }
-        })
-    }, []);
-
-    // Posts update to DB //
-    useEffect(() => {
-        if (update != "") {
-            console.log(update)
-            let data = {
-                server: currentServer,
-                update: update
-            };
-            Axios.post("http://localhost:3002/post/update", data)
-                .then((res) => {
-                    if (res.data === "Error") {
-                        console.log("UPDATE POSTING ERROR");
-                    } else {
-                        console.log("EMITTING UPLOAD TO SOCKET")
-                        socket.emit("uploaded", ({ room: currentServer, email: globalEmail, fileName: res.data.name, fileKey: res.data.key}));
-                    }
-                });
-        } else {
-            console.log("NO UPDATES");
-        }
-    }, [update])
-
-    const renderUpdates = () => {
-        return allUpdates.map((upd, idx) => {
-            return(
-                <div>
-                    <div className={classes.updateDiv} id={idx}>
-                        <Typography className={classes.updates} variant="body">{upd}</Typography>
-                    </div>
-                    <hr color="#27282B" className={classes.divider}/>
-                </div>
-            )
-        })
-    }
 
     return(
         <div className={classes.box}>
             <br></br>
-            <Typography className={classes.title} variant="h5">Activity</Typography>
-            {allUpdates != "No updates" && typeof allUpdates != 'string' ? 
-            renderUpdates()
-            :
-            <p>NO UPDATES YET</p>
-            }
         </div>
     )
 };

@@ -7,6 +7,7 @@ import Login from './routes/Login';
 import { useContext, createContext, useState } from 'react';
 import { UserEmailContext, CurrentServerContext, SocketContext} from './global/contexts';
 import io, { Socket } from 'socket.io-client';
+import Profile from './routes/Profile';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
               <Route path="/main" element={<Main/>}/>
               <Route path="/register" element={<Register/>}/>
               <Route path="/login" element={<Login/>}/>
+              <Route path="/profile" element={<Profile/>}/>
             </Routes>
           </BrowserRouter>
       </CurrentServerContext.Provider>

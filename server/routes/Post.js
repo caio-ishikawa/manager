@@ -48,7 +48,7 @@ router.post('/add_user', async(req, res) => {
     const server = await Server.findOne({ name: serverName });
     if (!user) {
         res.status(400).send("No user found");
-    } else if (!server.members.includes(user)) {
+    } else if (!server.members.includes(email)) {
         const updatedUser = user.servers.push(serverName);
         const updatedServer = server.members.push(email);
         const savedUSer = user.save();
@@ -56,6 +56,24 @@ router.post('/add_user', async(req, res) => {
         res.send("User added");
     } else {
         res.status(301).send("User already invited");
+    }
+});
+
+router.post('/profile_pic', upload.single('file'), async (req, res) => {
+    const email = req.body.email;
+    const file = req.file;
+    console.log(email);
+
+    const fileUpload = await uploadFile(file);
+    console.log(fileUpload);
+
+    const user = await User.findOneAndUpdate({ email: email }, {profile_picture: fileUpload.Key});
+
+    try{
+        const savedUser = user.save();
+        res.send(user);
+    } catch (err) {
+        res.send("Error");
     }
 });
 

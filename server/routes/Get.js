@@ -61,4 +61,16 @@ router.post('/file', async(req, res) => {
     console.log(fileKey);
 });
 
+router.post('/user_details', async (req, res) => {
+    const email = req.body.email;
+
+    const user = await User.findOne({ email: email });
+    if (!user) {
+        res.status(400).send("Error");
+    } else {
+        res.send(user);
+    }
+    
+});
+
 module.exports = router;
