@@ -21,5 +21,5 @@ TODO:
 ### TODO: ###
 - Add voice/video chat (WebRTC).
 - Get profile pictures to show up on chat.
-- Add profile picture support for servers (UI + API endpoint built).
+- Add profile picture support for user-created servers (UI + API endpoint built).
 
