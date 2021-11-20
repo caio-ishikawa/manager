@@ -33,13 +33,13 @@ const Register = () => {
         <div style={{ backgroundColor: "#24252E", height: "100vh", overflow:"hidden"}}>
                 <Grid container spacing={0}>
                     <Grid item md={3.5} lg={3.5}>
-                        <Typography sx={{ color: "white", marginLeft: "2vh", marginTop:"5vh", marginBottom: "5vh"}} variant="h4">Welcome</Typography>
+                        <Typography sx={{ color: "white", marginLeft: "2vh", marginTop:"5vh", marginBottom: "5vh"}} variant="h4">Sign up</Typography>
                         <InputBase className={classes.chatInput} placeholder="First Name" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
                         <InputBase className={classes.chatInput} placeholder="Last Name" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={lastName} onChange={(e) => setLastName(e.target.value)}/>
                         <InputBase className={classes.chatInput} placeholder="Email" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={email} onChange={(e) => setEmail(e.target.value)}/>
                         <br/>
                         <InputBase type="password" className={classes.chatInput} placeholder="Password" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={password} onChange={(e) => setPassword(e.target.value)}/>
-                        <Typography sx={{ marginLeft: "2vh", color: "#9292A0"}} variant="body">Already have an account? Log in here</Typography>
+                        <Typography sx={{ marginLeft: "2vh", color: "#9292A0"}} variant="body">Already have an account? <Link to="/login">Log in here</Link></Typography>
                         <br/>
                         <Link to="/">
                             <Button variant="contained" sx={{ backgroundColor: "#9292A0", marginLeft: "2vh", marginTop: "2vh"}}>Back</Button>

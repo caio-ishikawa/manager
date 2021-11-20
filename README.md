@@ -16,6 +16,7 @@ TODO:
 
 ## KNOWN BUGS ##
 - ~~Messages get rendered more than once sometimes (They are NOT getting sent multiple times to the DB, so it must be a rendering bug)~~ (FIXED)
+- Online user feature does not update automatically (needs to switch server/cause re-render to trigger).
 
 ### TODO: ###
 - Add voice/video chat (WebRTC).

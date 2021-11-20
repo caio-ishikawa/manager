@@ -22,7 +22,7 @@ export const renderChat = (serverMessages) => {
                             </div>
                             :
                             <div style={{ marginLeft: "-1.5vh", marginTop: "-0.55vh"}}  key={idx}>
-                                <p style={{ fontWeight: "600"}}>{string.email}:</p>
+                                <p style={{ fontWeight: "600"}}>{string.user}:</p>
                                 <img alt={string.user} style={{ maxHeight: "25vh"}} src={"https://manager-io-app.s3.amazonaws.com/" + string.key}/>
                             </div>
                         }

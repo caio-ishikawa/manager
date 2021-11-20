@@ -19,7 +19,7 @@ function App() {
       <CurrentServerContext.Provider value={[currentServer, setCurrentServer]}>
           <BrowserRouter>
             <Routes>
-              <Route exact path="/" element={<Home/>}/>
+              <Route exact path="/" element={<Login/>}/>
               <Route path="/main" element={<Main/>}/>
               <Route path="/register" element={<Register/>}/>
               <Route path="/login" element={<Login/>}/>

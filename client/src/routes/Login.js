@@ -33,15 +33,15 @@ const Login = () => {
         <div style={{ backgroundColor: "#24252E", height: "100vh", overflow:"hidden"}}>
             <Grid container spacing={0}>
                 <Grid item md={3.5} lg={3.5}>
-                    <Typography sx={{ color: "white", marginLeft: "2vh", marginTop:"5vh", marginBottom: "5vh"}} variant="h4">Welcome</Typography>
+                    <Typography sx={{ color: "white", marginLeft: "2vh", marginTop:"5vh", marginBottom: "5vh"}} variant="h4">Log in</Typography>
                     <InputBase className={classes.chatInput} placeholder="Email" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={globalEmail} onChange={(e) => setGlobalEmail(e.target.value)}/>
                     <br/>
                     <InputBase type="password" className={classes.chatInput} placeholder="Password" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    <Typography sx={{ marginLeft: "2vh", color: "#9292A0"}} variant="body">Don't have an account? Sign up here</Typography>
+                    <Typography sx={{ marginLeft: "2vh", color: "#9292A0"}} variant="body">Don't have an account? <Link to="/register">Sign up here</Link></Typography>
                     <br/>
-                    <Link to="/">
+                    {/* <Link to="/">
                         <Button variant="contained" sx={{ backgroundColor: "#9292A0", marginLeft: "2vh", marginTop: "2vh"}}>Back</Button>
-                    </Link>
+                    </Link> */}
                     <Button variant="contained" sx={{ color: "white", marginLeft: "2vh", marginTop: "2vh"}} onClick={() => submitData()}>Log in</Button>
                 </Grid>
                 <Grid sx={{ backgroundColor: "#131316", height: "100vh", overflow: "hidden"}} item md={8.5} lg={8.5}>
