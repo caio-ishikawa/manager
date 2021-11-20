@@ -10,7 +10,7 @@ export const renderOldChat = (serverMessages) => {
 
     return serverMessages.map((string, idx) => {
         return(
-            <div id={idx} style={{ display: "flex", textAlign: "left", alignItems: "top", borderRadius: "6px", paddingLeft: "1vh" }} onMouseEnter={() => { changeColor(idx)}} onMouseOut={() => revertColor(idx)}>
+            <div id={idx} style={{ display: "flex", textAlign: "left", alignItems: "top", paddingLeft: "1vh" }} onMouseEnter={() => { changeColor(idx)}} onMouseOut={() => revertColor(idx)}>
             <Grid key={idx} container justify="center" spacing={-26}>
                 <Grid sx={{ borderRadius: "10%", overflow: "hidden", display:"block", alignItems:"center"}} item sm={1.5} md={1.5} lg={1.5}>
                     <Avatar sx={{ height: "3.5vh", width: "3.5vh", marginBottom: "2vh", marginTop: "1.5vh"}} alt={string.user} src={def_profile}/>
