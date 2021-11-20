@@ -49,6 +49,7 @@ const ProjectView = (props) => {
             console.log("CLIENT SIDE HAS LEFT SERVER: ", server_room);
         });
 
+
         return () => { socket.off("message")};
     },[]);
     // -------------------------------- //
@@ -141,7 +142,6 @@ const ProjectView = (props) => {
         <div className={classes.box}>
             <br></br>
             <div className={classes.chat}>
-                <Button onClick={(e) => sendMessage(e)}>test</Button>
                 {serverMessages ? renderOldChat(serverMessages) : console.log('no old chat')}
                 {allChat ? renderChat(allChat) : console.log('no chat')} 
             </div>
@@ -151,8 +151,9 @@ const ProjectView = (props) => {
                 <p></p>
             }
             <div className={classes.chatContainer}>
-             
+                <form onSubmit={(e) => sendMessage(e)} style={{ width: "100%"}}>
                 <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={message} onChange={(e) => userTyping(e)} startAdornment={<IconButton aria-describedby={id} onClick={(e) => openPopover(e)}><AddCircleIcon className={classes.icon}/></IconButton>}/>
+                </form>
             </div>
 
             {/* POPOVER  */}
@@ -189,7 +190,6 @@ const useStyles = makeStyles({
         borderBottomStyle: "solid",
         width: "95%",
         marginBottom: "3%",
-        margin: "auto",
         overflowY: "auto",
     },
     chatContainer: {
