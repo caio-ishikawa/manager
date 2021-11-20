@@ -23,7 +23,7 @@ const Main = () => {
     return(
         <div className={classes.root}>
             <Grid className={classes.root} container spacing={0}>
-                <Grid className={classes.root} item sm={1} md={0.6} lg={0.6}>
+                <Grid item className={classes.root} item sm={1} md={0.6} lg={0.6}>
                     <ProjectList/> 
                 </Grid>
                 <Grid item sm={2} md={2.6} lg={2.3}>

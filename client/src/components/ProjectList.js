@@ -1,8 +1,10 @@
 import { makeStyles } from '@mui/styles';
-import { Typography, Modal, Box, Button, Avatar, Tooltip } from '@mui/material';
+import { Typography, Modal, Box, Button, Avatar, Tooltip, Grid,  TextField } from '@mui/material';
 import Axios from 'axios';
 import { useState, useContext, useEffect } from 'react';
 import { UserEmailContext, CurrentServerContext } from '../global/contexts';
+import serverIcon from '../assets/serverIcon.png';
+import { Link } from 'react-router-dom';
 
 const ProjectList = () => {
     const classes = useStyles();
@@ -47,11 +49,18 @@ const ProjectList = () => {
     return (
         <div className={classes.box}>
             <br></br>
+            <div className={classes.serverIcon}>
+                <Link to="/profile">
+                    <Tooltip title="PROFILE" placement="right">
+                        <Avatar sx={{ width: "4.8vh", height: "4.8vh"}}>P</Avatar>
+                    </Tooltip>
+                </Link>
+            </div>
             {serverList != "User not in any server" && typeof serverList != 'string'?
             serverList.map((content, idx) => (
                 <div key={idx} className={classes.serverIcon} onClick={() => setCurrentServer(content)}>
                     <Tooltip key={idx} title={content} placement="right">
-                        <Avatar key={idx} sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
+                            <Avatar key={idx} sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
                     </Tooltip>
                 </div>
                 
@@ -72,12 +81,35 @@ const ProjectList = () => {
             aria-describedby="modal-modal-description"
             >
                 <Box className={classes.modal}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Customize your server 
-                    </Typography>
-                    <input placeholder="server name" onChange={(e) => setServerName(e.target.value)}/>
-                    <Button onClick={() => submitData()}>Create server</Button>
-                    </Box>
+                    <div className={classes.modalTitle}>
+                        <Typography id="modal-modal-title" variant="h5" component="h2" sx={{ color: "#3872F5", marginTop: "1vh"}}>
+                                    Customize your server 
+                        </Typography>
+                        <Typography variant="body" sx={{ marginLeft: "2vh", marginRight: "2vh", marginTop: "1vh", textAlign: "center", display: "flex", color: "#8E92A4"}}>
+                            By creating a server, you will have access to free voice and text chat to use amongst your friends.
+                        </Typography>
+                    </div>
+                    <Grid container>
+                        <Grid item sm={7} md={7} lg={7}>
+                            <TextField sx={{ marginTop: "2.9vh"}} variant="standard" size="small" placeholder="server name" onChange={(e) => setServerName(e.target.value)} className={classes.inputServerName}/>
+                        </Grid>
+                        <Grid item sm={5} md={5} lg={5}>
+                            <span className={classes.circle}>
+                                <img className={classes.plusIcon} src={serverIcon} height="30"/>
+                            </span>
+                        </Grid>
+                    </Grid>
+                    <div className={classes.footer}>
+                        <Grid container spacing={0}>
+                            <Grid item sm={7} md={7} lg={7}>
+                                <div></div>
+                            </Grid>
+                            <Grid item sm={5} md={5} lg={5}>
+                                <Button sx={{ backgroundColor: "#3872F5", marginLeft: "5vh"}} variant="contained" onClick={() => submitData()}>Create</Button>
+                            </Grid>
+                        </Grid>
+                    </div>
+                </Box>
             </Modal>
         </div>
     )
@@ -130,14 +162,52 @@ const useStyles = makeStyles({
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 400,
+        height: "31vh",
         backgroundColor: "white",
-        textAlign: "center"
+        textAlign: "center",
+        borderRadius: "8px",
     },
     serverIcon: {
         cursor: "pointer",
         display: "flex",
         justifyContent: "center",
         marginBottom: "2vh",
+    },
+    modalTitle: {
+        marginBottom: "4vh"
+    },
+    circle: {
+        height: "10vh",
+        width: "10vh",
+        backgroundColor: "#3872F5",
+        border: "50px black",
+        borderRadius: "50%",
+        display: "inline-block",
+        cursor: "pointer"
+    },
+    inputServerName: {
+        marginTop: "6vh"
+    },
+    plusIcon: {
+        display: "block",
+        margin: "auto",
+        marginTop: "3.3vh",
+    },
+    footer: {
+        position: "fixed",
+        left: 0,
+        bottom: 0,
+        width: "100%",
+        height: "5vh",
+        backgroundColor: "#DDDEE4",
+        marginTop: "6vh",
+        borderRadius: "10px",
+        alignItems: "center",
+        display: "flex"
+    },
+    footSep: {
+        display: "flex",
+        flex: 1
     }
 });
 
