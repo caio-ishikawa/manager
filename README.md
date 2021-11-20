@@ -18,7 +18,7 @@ TODO:
 - ~~Messages get rendered more than once sometimes (They are NOT getting sent multiple times to the DB, so it must be a rendering bug)~~ (FIXED)
 
 ### TODO: ###
-- Refactor ProjectView.
-- Profile route.
-- Replace activity view with voice chat.
+- Add voice/video chat (WebRTC).
+- Get profile pictures to show up on chat.
+- Add profile picture support for servers (UI + API endpoint built).
 
