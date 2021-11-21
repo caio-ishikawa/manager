@@ -1,12 +1,10 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './routes/Home';
 import Main from './routes/Main';
 import Register from './routes/Register';
 import Login from './routes/Login';
-import { useContext, createContext, useState } from 'react';
-import { UserEmailContext, CurrentServerContext, SocketContext} from './global/contexts';
-import io, { Socket } from 'socket.io-client';
+import { useState } from 'react';
+import { UserEmailContext, CurrentServerContext } from './global/contexts';
 import Profile from './routes/Profile';
 
 

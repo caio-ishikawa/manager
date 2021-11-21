@@ -43,7 +43,7 @@ const ProjectList = () => {
             name: serverName
         };
         Axios.post('http://localhost:3002/post/add_server', data)
-            .then((res) => console.log(res));
+            //.then((res) => console.log(res));
     };
 
     return (

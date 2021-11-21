@@ -5,8 +5,7 @@ import { changeColor } from './changeColor';
 import { revertColor } from './revertColor';
 
 export const renderChat = (serverMessages) => {
-    console.log("CHAT MESSAGES: ", serverMessages);
-
+    console.log('running chat render')
     return serverMessages.map((string, idx) => {
         return(
             <div id={idx} style={{ display: "flex", textAlign: "left", alignItems: "top", paddingLeft: "1vh" }} onMouseEnter={() => changeColor(idx)} onMouseOut={() => revertColor(idx)}>

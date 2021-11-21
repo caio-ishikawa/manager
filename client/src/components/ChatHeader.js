@@ -2,10 +2,10 @@ import { Typography, Toolbar, AppBar, Box, IconButton, Popover, InputBase } from
 import { makeStyles } from "@mui/styles";
 import { Link } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import Axios from 'axios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { CurrentServerContext, UserEmailContext, SocketContext } from "../global/contexts";
+import { CurrentServerContext, UserEmailContext } from "../global/contexts";
 
 const ChatHeader = (props) => {
     const socket = props.socket;

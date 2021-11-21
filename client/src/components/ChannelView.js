@@ -1,8 +1,8 @@
 import { makeStyles } from "@mui/styles";
 import { useEffect, useState, useContext } from 'react';
-import { UserEmailContext, CurrentServerContext, SocketContext } from "../global/contexts";
+import { UserEmailContext, CurrentServerContext } from "../global/contexts";
 import Axios from 'axios';
-import { Typography, Avatar, Grid, Stack } from "@mui/material";
+import { Typography, Avatar, Grid } from "@mui/material";
 import def_profile from '../assets/def_profile.png';
 import OnlineAvatar from "./OnlineAvatar";
 
@@ -17,7 +17,6 @@ const ChannelView = (props) => {
 
     useEffect(() => {
         if (currentServer) {
-            console.log({currentServer, globalEmail})
             let data = {
                 email: globalEmail,
                 server: currentServer 
@@ -25,11 +24,9 @@ const ChannelView = (props) => {
             Axios.post('http://localhost:3002/get/all_members', data)
                 .then((res) => {
                     let arr = Object.values(res.data);
-                    console.log(typeof arr);
                     setAllMembers(arr)
                 });
         }
-        console.log(allMembers);
     }, [currentServer])
 
     useEffect(() => {

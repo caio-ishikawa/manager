@@ -3,7 +3,7 @@ import { InputBase, Button, Typography, Popover} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton } from "@mui/material";
 import { useEffect, useState, useContext } from 'react';
-import { UserEmailContext, CurrentServerContext, SocketContext } from "../global/contexts";
+import { UserEmailContext, CurrentServerContext } from "../global/contexts";
 import Axios from 'axios';
 import { renderChat } from "../utils/renderChat";
 import { renderOldChat } from '../utils/renderOldChat';
@@ -11,11 +11,9 @@ import { renderOldChat } from '../utils/renderOldChat';
 
 const ProjectView = (props) => {
     const socket = props.socket;
-    console.log("SOCKET: ", socket)
     const classes = useStyles();
     const [message, setMessage] = useState('');
     const [allChat, setAllChat] = useState([]);
-    const [addedUsername, setAddedUsername] = useState('');
     const [update, setUpdate] = useState(false);
     const [typing, setTyping] = useState(false);
     const [whoTyping, setWhoTyping] = useState('');
@@ -24,13 +22,15 @@ const ProjectView = (props) => {
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     const [file, setFile] = useState('');
     const [profilePic, setProfilePic] = useState('');
-    const [fileKey, setFileKey] = useState('');
-    
 
     // Listens for socket events //
     useEffect(() => {
+        let chatCount;
+        let oldChatCount;
         socket.on("message", ({ message, email, pic }) => {
-            setAllChat((_messages) => [ ..._messages, { email, message, pic }])
+            console.log(message.length)
+            setAllChat((_messages) => [..._messages, { email, message, pic }])
+            chatCount = allChat.length
         });
         socket.on("typing", ({ email }) => {
             if (email != globalEmail) {
@@ -79,7 +79,6 @@ const ProjectView = (props) => {
 
     // Sets message state based on user's input and emits typing event to socket //
     const userTyping = (e) => {
-        setMessage(e.target.value);
 
         if (e.target.value.length > 0) {
             socket.emit("typing", ({ room: currentServer, email: globalEmail }));
@@ -94,21 +93,19 @@ const ProjectView = (props) => {
     // Sends message to desired server //
     const sendMessage = (e) => {
         // Emits message to socket //
-        //console.log("SENDING MESSAGE: ", message);
-        socket.emit('message', ({ message: message, email: globalEmail, room: currentServer, pic: profilePic }));
+        socket.emit('message', ({ message: document.getElementById('input_base').value, email: globalEmail, room: currentServer, pic: profilePic }));
         socket.emit("stopped typing", ({ room: currentServer, email: globalEmail }));
         e.preventDefault();
-        setMessage('');
 
         //Sends data to Chat model //
         let data = {
             email: globalEmail,
             server: currentServer,
-            message: message,
+            message: document.getElementById('input_base').value,
             pic: profilePic 
         };
         Axios.post('http://localhost:3002/post/chat', data)
-            .then((res) => console.log(res));
+            // .then((res) => console.log(res));
     };
     // -------------------------------- //
 
@@ -134,8 +131,8 @@ const ProjectView = (props) => {
 
         const result = await Axios.post('http://localhost:3002/post/file', fileData , { headers: {'Content-Type': 'multipart/form-data'}});
         try {
-            if (result.data.file_key != undefined) {
-                console.log("FILE RESULT: ", result)
+            if (result.data.file_key !== undefined) {
+                //console.log("FILE RESULT: ", result)
                 let key = result.data.file_key;
                 setAllChat((_messages) => [ ..._messages, { globalEmail, key}]);
                 socket.emit("uploaded", ({ email: globalEmail, server: currentServer, fileName:result.data.name, fileKey: result.data.key}));
@@ -159,7 +156,7 @@ const ProjectView = (props) => {
             }
             <div className={classes.chatContainer}>
                 <form onSubmit={(e) => sendMessage(e)} style={{ width: "100%"}}>
-                <InputBase className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}} value={message} onChange={(e) => userTyping(e)} startAdornment={<IconButton aria-describedby={id} onClick={(e) => openPopover(e)}><AddCircleIcon className={classes.icon}/></IconButton>}/>
+                <InputBase id="input_base" className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}}  onChange={(e) => userTyping(e)} startAdornment={<IconButton aria-describedby={id} onClick={(e) => openPopover(e)}><AddCircleIcon className={classes.icon}/></IconButton>}/>
                 </form>
             </div>
 

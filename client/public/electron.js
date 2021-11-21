@@ -9,7 +9,9 @@ function createWindow() {
     width: 1400,
     height: 1050,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
+      worldSafeExecuteJavaScript: true,
+      contextIsolation: true
     },
   });
 
