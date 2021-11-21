@@ -1,14 +1,9 @@
-import { ClassNames } from "@emotion/react";
 import { makeStyles } from "@mui/styles";
-import TextField from '@mui/material/TextField';
-import { InputBase, Button, Avatar, Divider, Tooltip, Typography, Popover} from "@mui/material";
+import { InputBase, Button, Typography, Popover} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { IconButton, Grid } from "@mui/material";
-import ChatHeader from "./ChatHeader";
-import io from 'socket.io-client';
+import { IconButton } from "@mui/material";
 import { useEffect, useState, useContext } from 'react';
 import { UserEmailContext, CurrentServerContext, SocketContext } from "../global/contexts";
-import def_profile from '../assets/def_profile.png';
 import Axios from 'axios';
 import { renderChat } from "../utils/renderChat";
 import { renderOldChat } from '../utils/renderOldChat';
@@ -28,13 +23,14 @@ const ProjectView = (props) => {
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     const [file, setFile] = useState('');
+    const [profilePic, setProfilePic] = useState('');
     const [fileKey, setFileKey] = useState('');
     
 
     // Listens for socket events //
     useEffect(() => {
-        socket.on("message", ({ message, email}) => {
-            setAllChat((_messages) => [ ..._messages, { email, message }])
+        socket.on("message", ({ message, email, pic }) => {
+            setAllChat((_messages) => [ ..._messages, { email, message, pic }])
         });
         socket.on("typing", ({ email }) => {
             if (email != globalEmail) {
@@ -55,7 +51,7 @@ const ProjectView = (props) => {
     // -------------------------------- //
         
 
-    // Joins desired server based on the currentServer context //
+    // Joins desired server based on the currentServer context and gets all chat data from DB //
     useEffect(() =>  {
         setAllChat([]);
         socket.emit("swap servers", ({email: globalEmail}));
@@ -66,6 +62,16 @@ const ProjectView = (props) => {
         Axios.post('http://localhost:3002/get/server_msgs', {server: currentServer})
             .then((res) => {
                 setServerMessages(res.data)
+            });
+        
+        // Gets user profile pic //
+        Axios.post('http://localhost:3002/get/user_details', { email: globalEmail})
+            .then((res) => {
+                if (res.data.profile_picture) {
+                    setProfilePic(res.data.profile_picture)
+                } else {
+                    setProfilePic(undefined);
+                }
             })
     }, [currentServer]);
     // -------------------------------- //
@@ -88,9 +94,9 @@ const ProjectView = (props) => {
     // Sends message to desired server //
     const sendMessage = (e) => {
         // Emits message to socket //
-        console.log("SENDING MESSAGE: ", message);
-        socket.emit('message', ({ message: message, email: globalEmail, room: currentServer }));
-        socket.emit("stopped typing", ({ room: currentServer, email: globalEmail}));
+        //console.log("SENDING MESSAGE: ", message);
+        socket.emit('message', ({ message: message, email: globalEmail, room: currentServer, pic: profilePic }));
+        socket.emit("stopped typing", ({ room: currentServer, email: globalEmail }));
         e.preventDefault();
         setMessage('');
 
@@ -98,7 +104,8 @@ const ProjectView = (props) => {
         let data = {
             email: globalEmail,
             server: currentServer,
-            message: message
+            message: message,
+            pic: profilePic 
         };
         Axios.post('http://localhost:3002/post/chat', data)
             .then((res) => console.log(res));

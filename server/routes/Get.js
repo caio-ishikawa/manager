@@ -31,7 +31,19 @@ router.post('/all_members', async (req, res) => {
     } else {
         const server = await Server.findOne({ name: serverName });
         const serverUsers = server.members;
-        res.send(server.members);
+        //res.send(server.members);
+        let members = server.members;
+        let userObj = [];
+
+        for (var i = 0; i < members.length; i++) {
+            let user = await User.findOne({ email: members[i] });
+            let user_pic = user.profile_picture;
+            let user_email = user.email;
+            userObj.push({ "email":user_email, "pic":user_pic });
+        }
+        console.log(userObj);
+        res.send(userObj);
+
     }
 });
 

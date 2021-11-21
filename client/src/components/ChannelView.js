@@ -23,8 +23,13 @@ const ChannelView = (props) => {
                 server: currentServer 
             };
             Axios.post('http://localhost:3002/get/all_members', data)
-                .then((res) => setAllMembers(res.data));
+                .then((res) => {
+                    let arr = Object.values(res.data);
+                    console.log(typeof arr);
+                    setAllMembers(arr)
+                });
         }
+        console.log(allMembers);
     }, [currentServer])
 
     useEffect(() => {
@@ -61,14 +66,14 @@ const ChannelView = (props) => {
                     <div className={classes.userView}>
                         <Grid container spacing={0}>
                             <Grid item sm={3} md={2} lg={2}>
-                                {onlineMembers.length > 0 && onlineMembers.includes(name) ? 
-                                <OnlineAvatar picture={def_profile}/>
+                                {onlineMembers.length > 0 && onlineMembers.includes(name.email) ? 
+                                <OnlineAvatar picture={name.pic ?"https://manager-io-app.s3.amazonaws.com/" + name.pic : def_profile}/>
                                 :
-                                <Avatar src={def_profile} sx={{ height: "3vh", width: "3vh", marginBottom: "2vh" }}/>
+                                <Avatar src={name.pic ? "https://manager-io-app.s3.amazonaws.com/" + name.pic : def_profile} sx={{ height: "3vh", width: "3vh", marginBottom: "2vh" }}/>
                                 }
                             </Grid>
                             <Grid item sm={9} md={10} lg={10}>
-                                <Typography key={idx}>{name}</Typography>
+                                <Typography key={idx}>{name.email}</Typography>
                             </Grid>
                         </Grid>
                     </div>

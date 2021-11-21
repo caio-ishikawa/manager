@@ -86,12 +86,14 @@ router.post('/chat', async (req, res) => {
     let newMessage = new Chat({
         user: email,
         message: message,
-        server: server
+        server: server,
+        picture: req.body.pic ? req.body.pic : undefined
     });
 
     try{
-        const savedChat = await newMessage.save();
-        res.send(newMessage);
+        console.log(req.body.pic)
+        const savedMsg = await newMessage.save();
+        res.send(savedMsg);
     } catch(err) {
         res.send(err);
     }

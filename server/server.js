@@ -50,9 +50,9 @@ io.on('connection', socket => {
         console.log(user, "has joined", roomName);
     });
     // Send message to server //
-    socket.on("message", ({ message, email, room}) => {
+    socket.on("message", ({ message, email, room, pic}) => {
         console.log(socket.id, "sent msg", message)
-        io.sockets.in(room).emit('message', {message, email});
+        io.sockets.in(room).emit('message', {message, email, pic});
     });
     // Emit when user is typing //
     socket.on("typing", ({ room, email }) => {
