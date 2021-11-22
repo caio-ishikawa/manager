@@ -37,10 +37,14 @@ mongoose.connect(secrets, (err) => {
     }
 });
 
+const video_users = {};
+
 // ESTABLISHES SOCKET CONNECTIONS //
 io.on('connection', socket => {
     let server_room; 
+    let video_room;
     let user;
+
     // Join server //
     socket.on("join", ({roomName, email}) => {
         socket.join(roomName);
@@ -81,6 +85,43 @@ io.on('connection', socket => {
         io.emit("user left", ( user ));
         console.log(user, " has disconnected");
     });
+    socket.on("joined video", ({ room, email }) => {
+        if (email === undefined ) {
+            console.log("email undefined");
+            return;
+        }
+        console.log(email, " has joined video room: ", room);
+        video_room = room;
+        if (video_users[room]) {
+            const length = video_users[room].length;
+            if (length === 4) {
+                socket.emit("full room");
+                return;
+            }
+            video_users[room].push(socket.id);
+        } else {
+            video_users[room] = [socket.id];
+        }
+        const usersInTheRoom = video_users[room].filter(id => id !== socket.id);
+        console.log("ROOM USERS: ", usersInTheRoom);
+        socket.join(video_room);
+        io.sockets.in(video_room).emit("all users", ({ usersInTheRoom }));
+    });
+    socket.on("exit video", ({ room, email }) =>{
+        console.log(email, " has left video room: ", room);
+        socket.leave("heyGeneral");
+        if (video_users[room].includes(user)){
+            let idx = video_users[room].indexOf(user);
+            video_users[room].splice(idx, 1);
+        } 
+        socket.leave(video_room);
+    });
+    socket.on("sending signal", payload => {
+        io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
+    });
+    socket.on("returning signal", payload => {
+        io.to(payload.callerID).emit("receiving returned signal", { signal: payload.signal, id: socket.id })
+    })
 
     
 })

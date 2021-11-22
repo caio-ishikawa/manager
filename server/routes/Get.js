@@ -55,6 +55,16 @@ router.post('/server_msgs', async (req, res) => {
     res.send(chat);
 });
 
+
+// Gets all server voice/video channels //
+router.post('/all_channels', async(req, res) => {
+    const serverName = req.body.server;
+
+    let server = await Server.findOne({ name: serverName });
+    res.send(server.channels);
+
+});
+
 router.post('/updates', async(req, res) => {
     const serverName = req.body.server;
 

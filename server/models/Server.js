@@ -21,6 +21,9 @@ const ServerSchema = new mongoose.Schema({
     },
     updates: [{
         type: String
+    }],
+    channels: [{
+        type: String,
     }]
 });
 

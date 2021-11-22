@@ -3,7 +3,7 @@ import { InputBase, Button, Typography, Popover} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton } from "@mui/material";
 import { useEffect, useState, useContext } from 'react';
-import { UserEmailContext, CurrentServerContext } from "../global/contexts";
+import { UserEmailContext, CurrentServerContext, VideoContext } from "../global/contexts";
 import Axios from 'axios';
 import { renderChat } from "../utils/renderChat";
 import { renderOldChat } from '../utils/renderOldChat';
@@ -93,6 +93,7 @@ const ProjectView = (props) => {
     // Sends message to desired server //
     const sendMessage = (e) => {
         // Emits message to socket //
+        let form = document.getElementById('form')
         socket.emit('message', ({ message: document.getElementById('input_base').value, email: globalEmail, room: currentServer, pic: profilePic }));
         socket.emit("stopped typing", ({ room: currentServer, email: globalEmail }));
         e.preventDefault();
@@ -106,6 +107,9 @@ const ProjectView = (props) => {
         };
         Axios.post('http://localhost:3002/post/chat', data)
             // .then((res) => console.log(res));
+        
+        form.reset();
+        
     };
     // -------------------------------- //
 
@@ -155,7 +159,7 @@ const ProjectView = (props) => {
                 <p></p>
             }
             <div className={classes.chatContainer}>
-                <form onSubmit={(e) => sendMessage(e)} style={{ width: "100%"}}>
+                <form id="form" onSubmit={(e) => sendMessage(e)} style={{ width: "100%"}}>
                 <InputBase id="input_base" className={classes.chatInput} placeholder="Message #General" color="white" inputProps={{ style: {color: "white", margin: "0.5vh" }}}  onChange={(e) => userTyping(e)} startAdornment={<IconButton aria-describedby={id} onClick={(e) => openPopover(e)}><AddCircleIcon className={classes.icon}/></IconButton>}/>
                 </form>
             </div>

@@ -20,7 +20,7 @@ router.post('/add_server', async(req, res) => {
         // Create server //
         const newServer = new Server({
             name: serverName,
-            created_by: email
+            created_by: email,
         });
 
         // Look for server's creator's data //
@@ -30,6 +30,7 @@ router.post('/add_server', async(req, res) => {
             // Saves server and adds server name to the User Schema //
             serverUser.servers.push(serverName);
             newServer.members.push(email);
+            newServer.channels.push(defaultChannel);
             const savedUser = serverUser.save();
             const savedServer = newServer.save()
             res.send(newServer);

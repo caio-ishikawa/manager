@@ -11,6 +11,7 @@ Manager is a Discord-inspired collaboration desktop app, which allows users to c
 ## KNOWN BUGS ##
 - ~~Messages get rendered more than once sometimes (They are NOT getting sent multiple times to the DB, so it must be a rendering bug)~~ (FIXED)
 - Online user feature does not update automatically (needs to switch server/cause re-render to trigger).
+- Video chat renders all videos from previously connected users. (Socket.io event listener for video chat needs to clean up the active_users array when user disconnects from video).
 
 ### TODO: ###
 - Add voice/video chat (WebRTC).

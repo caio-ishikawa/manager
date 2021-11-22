@@ -8,17 +8,27 @@ import ChatHeader from '../components/ChatHeader';
 import ActivityViewHeader from '../components/ActivityViewHeader';
 import ChannelViewHeader from '../components/ChannelViewHeader';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserEmailContext, SocketContext } from '../global/contexts';
+import { useContext, useEffect, useState } from 'react';
+import { UserEmailContext, CurrentServerContext, VideoContext } from '../global/contexts';
 import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:3002/');
 
-const Main = () => {
+const Main = (props) => {
     const classes = useStyles();
     const navigate = useNavigate();
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
-    console.log(globalEmail);
+    const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
+
+    // Video context defines what screen should be showing (video or chat) //
+    const [video, setVideo] = useContext(VideoContext);
+    // -------------------------------- //
+
+    // Re-renders after video context updates //
+    useEffect(() => {
+        console.log(video);
+    }, [video])
+    
 
     return(
         <div className={classes.root}>
