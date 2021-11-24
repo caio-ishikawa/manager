@@ -1,5 +1,5 @@
 import { makeStyles } from "@mui/styles";
-import { Button, Modal, Grid, Box, Typography, InputBase } from "@mui/material";
+import { Button, Modal, Grid, Box, Typography, InputBase, Divider } from "@mui/material";
 import { useContext, useState, useEffect } from 'react';
 import Axios from 'axios';
 import { UserEmailContext, CurrentServerContext, CurrentChannelContext} from '../global/contexts';
@@ -16,7 +16,7 @@ const ActivityGrid = ( props ) => {
 
     // Sets the channel list state when user changes server //
     useEffect(() => {
-        Axios.post("http://localhost:3002/get/channels", {server: currentServer})
+        Axios.get("http://localhost:3002/get/channels", { params: { server: currentServer }})
             .then((res) => setChannels(res.data));
     },[currentServer]);
 
@@ -51,11 +51,14 @@ const ActivityGrid = ( props ) => {
     return(
         <div className={classes.box}>
             <br></br>
-            <Button variant="text" onClick={() => handleModal()}>Add Channel</Button>
+            <Box sx={{ justifyContent: "center", textAlign: "center", marginBottom:"2vh"}}>
+                <Button variant="text" sx={{ color: "white", backgroundColor: "#555562", width: "85%"}} onClick={() => handleModal()}>Add Channel</Button>
+            </Box>
+            <Divider light sx={{ width: "100%", color: "white"}}/>
             {channels ?
             channels.map((chan, idx) => (
                 <div key={idx}>
-                    <Button sx={{ color: "white" }} onClick={() => changeChannel(chan)} variant="text">#{chan}</Button>
+                    <Button sx={{ color: "#BFC2C5", width: "100%", justifyContent:"flex-start", textTransform: "none", fontSize: "1.7vh"}} onClick={() => changeChannel(chan)} variant="text"># {chan}</Button>
                 </div>
             ))
             :
@@ -100,9 +103,6 @@ const useStyles = makeStyles({
         marginTop: "2vh",
         marginBottom: "2vh"
     },
-    updates: {
-        color: "#C9CBCF",
-    },
     updateDiv: {
         width: "90%",
         margin: "auto",
@@ -144,6 +144,9 @@ const useStyles = makeStyles({
         display: "flex",
         marginTop: "2vh"
     },
+    newChan: {
+        justifyContent: "center"
+    }
 })
 
 

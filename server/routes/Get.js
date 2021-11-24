@@ -5,8 +5,8 @@ const Chat = require('../models/Chat');
 const { emailExists } = require('../utils/emailExists');
 
 // GET USER's SUBSCRIBED SERVERS //
-router.post('/servers', async(req, res) => {
-    const email = req.body.email;
+router.get('/servers', async(req, res) => {
+    const email = req.query.email;
 
     if (!emailExists(email) || !email) {
         res.status(400).send("NOT LOGGED IN");
@@ -32,9 +32,9 @@ router.post('/servers', async(req, res) => {
     }
 });
 
-router.post('/all_members', async (req, res) => {
-    const email = req.body.email;
-    const serverName = req.body.server;
+router.get('/all_members', async (req, res) => {
+    const email = req.query.email;
+    const serverName = req.query.server;
 
     if (!emailExists(email)) {
         res.status(400).send("NOT LOGGED IN");
@@ -58,35 +58,17 @@ router.post('/all_members', async (req, res) => {
 });
 
 // Sends all chats pertaining to a specific server //
-router.post('/server_msgs', async (req, res) => {
-    const serverName = req.body.server;
-    const channelID = req.body.channel;
+router.get('/server_msgs', async (req, res) => {
+    const serverName = req.query.server;
+    const channelID = req.query.channel;
     console.log({ serverName, channelID });
     
     const chat = await Chat.find({ server: serverName, channel: channelID  });
     res.send(chat);
 });
 
-router.post('/updates', async(req, res) => {
-    const serverName = req.body.server;
-
-    const server = await Server.findOne({ name: serverName });
-
-    if (!server) {
-        res.send("No updates")
-    } else {
-        
-        res.send(server.updates);
-    }
-});
-
-router.post('/file', async(req, res) => {
-    const fileKey = req.body.fileKey;
-    console.log(fileKey);
-});
-
-router.post('/user_details', async (req, res) => {
-    const email = req.body.email;
+router.get('/user_details', async (req, res) => {
+    const email = req.query.email;
 
     const user = await User.findOne({ email: email });
     if (!user) {
@@ -96,8 +78,8 @@ router.post('/user_details', async (req, res) => {
     }
 });
 
-router.post("/channels", async (req, res) => {
-    const serverName = req.body.server;
+router.get("/channels", async (req, res) => {
+    const serverName = req.query.server;
 
     let server = await Server.findOne({ name: serverName });
     res.send(server.channels);

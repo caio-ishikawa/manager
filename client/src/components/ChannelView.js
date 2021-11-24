@@ -17,11 +17,13 @@ const ChannelView = (props) => {
 
     useEffect(() => {
         if (currentServer) {
-            let data = {
-                email: globalEmail,
-                server: currentServer 
+            let data = { 
+                params: {
+                    email: globalEmail,
+                    server: currentServer 
+                }
             };
-            Axios.post('http://localhost:3002/get/all_members', data)
+            Axios.get('http://localhost:3002/get/all_members', data)
                 .then((res) => {
                     let arr = Object.values(res.data);
                     setAllMembers(arr)

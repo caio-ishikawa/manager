@@ -19,9 +19,11 @@ const ProjectList = () => {
     // Retrieves all user's servers //
     useEffect(() => {
         let data = {
-            email: globalEmail,
+            params: {
+                email: globalEmail,
+            }
         };
-        Axios.post('http://localhost:3002/get/servers', data)
+        Axios.get('http://localhost:3002/get/servers', data)
             .then((res) => {
                 console.log(res)
                 setServerList(res.data);

@@ -150,6 +150,7 @@ router.post('/file', upload.single('file'), async (req, res) => {
     const file = req.file;
     const email = req.body.user;
     const serverName = req.body.server;
+    const channelName = req.body.channel;
 
     // Uploads to S3 bucket //
     const fileUpload = await uploadFile(file);
@@ -159,22 +160,16 @@ router.post('/file', upload.single('file'), async (req, res) => {
     let newImage = new Chat({
         user: email,
         file_key: fileUpload.Key,
-        server: serverName 
+        server: serverName,
+        channel: channelName 
     });
 
     try {
         let savedImg = await newImage.save();
+        res.send(newImage);
     } catch (err) {
         res.send("Error");
         console.log("IMAGE DID NOT SAVE TO CHAT MODEL")
-    }
-
-    try {
-        console.log(newImage);
-        res.send(newImage);
-    } catch (err) {
-        res.status(400).send("Error");
-        console.log("DID NOT WORK")
     }
 
 });

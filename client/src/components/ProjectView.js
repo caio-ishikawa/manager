@@ -60,14 +60,14 @@ const ProjectView = (props) => {
         socket.emit("join", ({roomName: currentChannel ? currentChannel: "placeholder", email: globalEmail}));
 
         // gets messages //
-        Axios.post('http://localhost:3002/get/server_msgs', {server: currentServer, channel: currentChannel})
+        Axios.get('http://localhost:3002/get/server_msgs', {params: {server: currentServer, channel: currentChannel}})
             .then((res) => {
                 console.log("CHANNEL CHATS: ", res.data)
                 setServerMessages(res.data)
             });
         
         // Gets user profile pic //
-        Axios.post('http://localhost:3002/get/user_details', { email: globalEmail})
+        Axios.get('http://localhost:3002/get/user_details', { params: { email: globalEmail }})
             .then((res) => {
                 if (res.data.profile_picture) {
                     setProfilePic(res.data.profile_picture)
@@ -133,6 +133,7 @@ const ProjectView = (props) => {
         fileData.append('file', file)
         fileData.append('user', globalEmail);
         fileData.append('server', currentServer);
+        fileData.append('channel', currentChannel);
 
         const result = await Axios.post('http://localhost:3002/post/file', fileData , { headers: {'Content-Type': 'multipart/form-data'}});
         try {
