@@ -22,6 +22,10 @@ const ChatSchema = new mongoose.Schema({
     server: {
         type: String,
         required: true
+    },
+    channel: {
+        type: String,
+        required: true
     }
 });
 

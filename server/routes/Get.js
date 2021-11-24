@@ -50,8 +50,10 @@ router.post('/all_members', async (req, res) => {
 // Sends all chats pertaining to a specific server //
 router.post('/server_msgs', async (req, res) => {
     const serverName = req.body.server;
+    const channelID = req.body.channel;
+    console.log({ serverName, channelID });
     
-    const chat = await Chat.find({ server: serverName });
+    const chat = await Chat.find({ server: serverName, channel: channelID  });
     res.send(chat);
 });
 
@@ -82,7 +84,13 @@ router.post('/user_details', async (req, res) => {
     } else {
         res.send(user);
     }
-    
 });
+
+router.post("/channels", async (req, res) => {
+    const serverName = req.body.server;
+
+    let server = await Server.findOne({ name: serverName });
+    res.send(server.channels);
+})
 
 module.exports = router;

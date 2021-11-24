@@ -81,6 +81,10 @@ io.on('connection', socket => {
         io.emit("user left", ( user ));
         console.log(user, " has disconnected");
     });
+    socket.on("join channel", ({ channel, email }) => {
+        socket.join(channel);
+        io.sockets.in(channel).emit("joined channel", ({ channel }));
+    });
 
     
 })

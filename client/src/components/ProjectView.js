@@ -3,7 +3,7 @@ import { InputBase, Button, Typography, Popover} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton } from "@mui/material";
 import { useEffect, useState, useContext } from 'react';
-import { UserEmailContext, CurrentServerContext } from "../global/contexts";
+import { UserEmailContext, CurrentServerContext, CurrentChannelContext } from "../global/contexts";
 import Axios from 'axios';
 import { renderChat } from "../utils/renderChat";
 import { renderOldChat } from '../utils/renderOldChat';
@@ -20,6 +20,7 @@ const ProjectView = (props) => {
     const [serverMessages, setServerMessages] = useState([]);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
+    const [currentChannel, setCurrentChannel] = useContext(CurrentChannelContext);
     const [file, setFile] = useState('');
     const [profilePic, setProfilePic] = useState('');
 
@@ -56,11 +57,12 @@ const ProjectView = (props) => {
         setAllChat([]);
         socket.emit("swap servers", ({email: globalEmail}));
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
-        socket.emit("join", ({roomName: currentServer ? currentServer : "placeholder", email: globalEmail}));
+        socket.emit("join", ({roomName: currentChannel ? currentChannel: "placeholder", email: globalEmail}));
 
         // gets messages //
-        Axios.post('http://localhost:3002/get/server_msgs', {server: currentServer})
+        Axios.post('http://localhost:3002/get/server_msgs', {server: currentServer, channel: currentChannel})
             .then((res) => {
+                console.log("CHANNEL CHATS: ", res.data)
                 setServerMessages(res.data)
             });
         
@@ -73,17 +75,16 @@ const ProjectView = (props) => {
                     setProfilePic(undefined);
                 }
             })
-    }, [currentServer]);
+    }, [currentServer, currentChannel]);
     // -------------------------------- //
 
 
     // Sets message state based on user's input and emits typing event to socket //
     const userTyping = (e) => {
-
         if (e.target.value.length > 0) {
-            socket.emit("typing", ({ room: currentServer, email: globalEmail }));
+            socket.emit("typing", ({ room: currentChannel, email: globalEmail }));
         } else {
-            socket.emit("stopped typing", ({ room: currentServer, email: globalEmail}));
+            socket.emit("stopped typing", ({ room: currentChannel, email: globalEmail}));
             setTyping(false);
         }
     };
@@ -93,8 +94,8 @@ const ProjectView = (props) => {
     // Sends message to desired server //
     const sendMessage = (e) => {
         // Emits message to socket //
-        socket.emit('message', ({ message: document.getElementById('input_base').value, email: globalEmail, room: currentServer, pic: profilePic }));
-        socket.emit("stopped typing", ({ room: currentServer, email: globalEmail }));
+        socket.emit('message', ({ message: document.getElementById('input_base').value, email: globalEmail, room: currentChannel, pic: profilePic }));
+        socket.emit("stopped typing", ({ room: currentChannel, email: globalEmail }));
         e.preventDefault();
 
         //Sends data to Chat model //
@@ -102,10 +103,14 @@ const ProjectView = (props) => {
             email: globalEmail,
             server: currentServer,
             message: document.getElementById('input_base').value,
-            pic: profilePic 
+            pic: profilePic,
+            channel: currentChannel 
         };
         Axios.post('http://localhost:3002/post/chat', data)
-            // .then((res) => console.log(res));
+             .then((res) => {
+                 console.log(res)
+                 e.target.reset()
+            });
     };
     // -------------------------------- //
 

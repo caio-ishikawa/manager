@@ -20,7 +20,7 @@ router.post('/add_server', async(req, res) => {
         // Create server //
         const newServer = new Server({
             name: serverName,
-            created_by: email
+            created_by: email,
         });
 
         // Look for server's creator's data //
@@ -29,6 +29,7 @@ router.post('/add_server', async(req, res) => {
         try {
             // Saves server and adds server name to the User Schema //
             serverUser.servers.push(serverName);
+            newServer.channels.push(defaultChannel);
             newServer.members.push(email);
             const savedUser = serverUser.save();
             const savedServer = newServer.save()
@@ -87,7 +88,8 @@ router.post('/chat', async (req, res) => {
         user: email,
         message: message,
         server: server,
-        picture: req.body.pic ? req.body.pic : undefined
+        picture: req.body.pic ? req.body.pic : undefined,
+        channel: req.body.channel ? req.body.channel : "General"
     });
 
     try{
@@ -146,6 +148,23 @@ router.post('/file', upload.single('file'), async (req, res) => {
         console.log("DID NOT WORK")
     }
 
+});
+
+router.post("/add_channel", async(req, res) => {
+    const serverName = req.body.server;
+    const channelName = req.body.channel;
+
+    let server = await Server.findOne({ name: serverName });
+
+    try {
+        console.log(server.channels);
+        server.channels.push(channelName);
+        let savedServer = await server.save();
+        res.send(server);
+    } catch (err) {
+        console.log("ERRPRJkJK")
+        return;
+    }
 });
 
 module.exports = router;

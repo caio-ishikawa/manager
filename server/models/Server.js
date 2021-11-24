@@ -4,7 +4,6 @@ const ServerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        min: 8
     },
     members: [{
         type: String,
@@ -21,6 +20,9 @@ const ServerSchema = new mongoose.Schema({
     },
     updates: [{
         type: String
+    }],
+    channels: [{
+        type: String,
     }]
 });
 
