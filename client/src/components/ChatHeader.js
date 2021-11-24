@@ -5,7 +5,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useState, useContext } from 'react';
 import Axios from 'axios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { CurrentServerContext, UserEmailContext } from "../global/contexts";
+import { CurrentServerContext, UserEmailContext, CurrentChannelContext } from "../global/contexts";
 
 const ChatHeader = (props) => {
     const socket = props.socket;
@@ -14,6 +14,7 @@ const ChatHeader = (props) => {
     const [addedUser, setAddedUser] = useState('');
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
+    const [currentChannel, setCurrentChannel] = useContext(CurrentChannelContext);
     const open = Boolean(anchorEl);
     const id = open ? 'popover' : undefined;
 

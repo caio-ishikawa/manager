@@ -41,6 +41,35 @@ router.post('/add_server', async(req, res) => {
     }
 });
 
+router.post('/add_server_picture', upload.single('file'), async (req, res) => {
+    const file = req.file;
+    const email = req.body.email;
+    const serverName = req.body.server;
+    const defaultChannel = "General";
+
+    const fileUpload = await uploadFile(file);
+    console.log(fileUpload);
+
+    const newServer = new Server({
+        name: serverName,
+        picture: fileUpload.Key,
+        created_by: email
+    });
+
+    const serverCreator = await User.findOne({ email: email });
+
+    try {
+        serverCreator.servers.push(serverName);
+        newServer.channels.push(defaultChannel);
+        newServer.members.push(email);
+        const savedServer = newServer.save();
+        const savedUser = serverCreator.save();
+        res.send(newServer)
+    } catch (err) {
+        res.send("Error");
+    }
+});
+
 router.post('/add_user', async(req, res) => {
     const email = req.body.email;
     const serverName = req.body.server;

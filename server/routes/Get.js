@@ -13,9 +13,19 @@ router.post('/servers', async(req, res) => {
     } else {
         const user = await User.findOne({ email: email });
         const userServers = user.servers;
+        const picArr = [];
+
+        for (var i = 0; i < userServers.length; i++) {
+            let server = await Server.findOne({ name: userServers[i]});
+            picArr.push(server.picture);
+        };
+
+        let data = userServers.map((server, idx) => {
+            return {server: server, pic: picArr[idx]};
+        })
 
         if (userServers.length > 0) {
-            res.send(userServers);
+            res.send(data);
         } else {
             res.send("User is not in any server");
         }

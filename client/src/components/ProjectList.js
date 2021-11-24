@@ -1,18 +1,20 @@
 import { makeStyles } from '@mui/styles';
 import { Typography, Modal, Box, Button, Avatar, Tooltip, Grid,  TextField } from '@mui/material';
 import Axios from 'axios';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import { UserEmailContext, CurrentServerContext } from '../global/contexts';
 import serverIcon from '../assets/serverIcon.png';
 import { Link } from 'react-router-dom';
 
 const ProjectList = () => {
+    const inputFile = useRef();
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext); 
     const [currentServer, setCurrentServer] = useContext(CurrentServerContext);
     const [serverName, setServerName] = useState('');
     const [serverList, setServerList] = useState([]);
+    const [file, setFile] = useState();
 
     // Retrieves all user's servers //
     useEffect(() => {
@@ -21,6 +23,7 @@ const ProjectList = () => {
         };
         Axios.post('http://localhost:3002/get/servers', data)
             .then((res) => {
+                console.log(res)
                 setServerList(res.data);
             });
     }, []);
@@ -38,13 +41,29 @@ const ProjectList = () => {
 
     // Submits new server info to backend //
     const submitData = () => {
-        let data = {
-            email: globalEmail,
-            name: serverName
-        };
-        Axios.post('http://localhost:3002/post/add_server', data)
-            //.then((res) => console.log(res));
+        // If user uploads server picture, post data to add_server, else send it to the add_server_picture endpoint, which uploads image to S3 bucket, and to server Schema //
+        if (!file) {
+            let data = {
+                email: globalEmail,
+                name: serverName
+            };
+            Axios.post('http://localhost:3002/post/add_server', data)
+                //.then((res) => console.log(res));
+        } else {
+            let form = new FormData();
+            form.append('file', file);
+            form.append('email', globalEmail);
+            form.append('server', serverName);
+
+            Axios.post('http://localhost:3002/post/add_server_picture', form, { headers: {'Content-Type': 'multipart/form-data'}})
+            .then((res) => console.log(res));
+        }
     };
+
+    const addPicture = () => {
+        inputFile.current.click();
+    };
+
 
     return (
         <div className={classes.box}>
@@ -58,9 +77,13 @@ const ProjectList = () => {
             </div>
             {serverList != "User not in any server" && typeof serverList != 'string'?
             serverList.map((content, idx) => (
-                <div key={idx} className={classes.serverIcon} onClick={() => setCurrentServer(content)}>
-                    <Tooltip key={idx} title={content} placement="right">
-                            <Avatar key={idx} sx={{ width: "4.8vh", height: "4.8vh"}}>{content}</Avatar>
+                <div key={idx} className={classes.serverIcon} onClick={() => setCurrentServer(content.server)}>
+                    <Tooltip key={idx} title={content.server} placement="right">
+                        {content.pic ?
+                        <Avatar key={idx} sx={{ width: "4.8vh", height: "4.8vh" }} src={"https://manager-io-app.s3.amazonaws.com/" + content.pic}></Avatar>
+                        :
+                            <Avatar key={idx} sx={{ width: "4.8vh", height: "4.8vh"}}>{content.server}</Avatar>
+                        }
                     </Tooltip>
                 </div>
                 
@@ -69,7 +92,7 @@ const ProjectList = () => {
             <p>no server</p>
             };
             <div onClick={() => handleModal()} className={classes.addProject}>
-                <Typography className={classes.addButton} variant="h5">+</Typography>
+                <Avatar sx={{ width: "4.8vh", height: "4.8vh"}}>+</Avatar>
             </div>
 
             {/* MODAL */}
@@ -94,7 +117,7 @@ const ProjectList = () => {
                             <TextField sx={{ marginTop: "2.9vh"}} variant="standard" size="small" placeholder="server name" onChange={(e) => setServerName(e.target.value)} className={classes.inputServerName}/>
                         </Grid>
                         <Grid item sm={5} md={5} lg={5}>
-                            <span className={classes.circle}>
+                            <span onClick={() => addPicture()} className={classes.circle}>
                                 <img className={classes.plusIcon} src={serverIcon} height="30"/>
                             </span>
                         </Grid>
@@ -111,6 +134,7 @@ const ProjectList = () => {
                     </div>
                 </Box>
             </Modal>
+            <input type="file" onChange={(e) => setFile(e.target.files[0])} id="file" ref={inputFile} style={{ display: "none "}}/>
         </div>
     )
 };
@@ -143,7 +167,6 @@ const useStyles = makeStyles({
         width: "5.5vh",
         borderWidth: 1,
         borderRadius: 100,
-        backgroundColor: "#555562",
         display: "flex",
         alignItems: "center",
         cursor: "pointer",
