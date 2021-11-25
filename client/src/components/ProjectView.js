@@ -141,7 +141,7 @@ const ProjectView = (props) => {
                 //console.log("FILE RESULT: ", result)
                 let key = result.data.file_key;
                 setAllChat((_messages) => [ ..._messages, { globalEmail, key}]);
-                socket.emit("uploaded", ({ email: globalEmail, server: currentServer, fileName:result.data.name, fileKey: result.data.key}));
+                socket.emit("uploaded", ({ email: globalEmail, server: currentServer, fileName:result.data.name, fileKey: result.data.key, picture: profilePic }));
             }
         } catch (err) {
             console.log(err);

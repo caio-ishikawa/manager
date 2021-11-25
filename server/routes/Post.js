@@ -151,6 +151,7 @@ router.post('/file', upload.single('file'), async (req, res) => {
     const email = req.body.user;
     const serverName = req.body.server;
     const channelName = req.body.channel;
+    const picture = req.body.picture;
 
     // Uploads to S3 bucket //
     const fileUpload = await uploadFile(file);
@@ -161,7 +162,8 @@ router.post('/file', upload.single('file'), async (req, res) => {
         user: email,
         file_key: fileUpload.Key,
         server: serverName,
-        channel: channelName 
+        channel: channelName,
+        picture: picture 
     });
 
     try {

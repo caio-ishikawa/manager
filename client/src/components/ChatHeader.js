@@ -48,7 +48,7 @@ const ChatHeader = (props) => {
             <Box sx={{ flexGrow: 1, width: "100%"}}>
                 <AppBar className={classes.bar} sx={{ backgroundColor: "#393941"}} position="relative" elevation={2}>
                     <Toolbar>
-                        <Typography style={{ flex: 1}}>{currentServer ? currentServer : "NO SERVER"}</Typography>
+                        <Typography style={{ flex: 1}} sx={{ fontWeight: "bold", fontSize: "2vh"}}>{currentServer ? currentServer : "NO SERVER"}</Typography>
                         <Link sx={{ flex: 1 }} to="/">Test</Link>
                         <IconButton onClick={(e) => handlePopover(e)} aria-describedby={id}>
                             <PersonAddIcon/>
