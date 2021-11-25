@@ -15,6 +15,7 @@ const ProjectList = () => {
     const [serverName, setServerName] = useState('');
     const [serverList, setServerList] = useState([]);
     const [file, setFile] = useState();
+    const [update, setUpdate] = useState(false);
 
     // Retrieves all user's servers //
     useEffect(() => {
@@ -28,7 +29,7 @@ const ProjectList = () => {
                 console.log(res)
                 setServerList(res.data);
             });
-    }, []);
+    }, [update]);
 
     // Changes server context //
     const swapServer = (content) => {
@@ -50,7 +51,7 @@ const ProjectList = () => {
                 name: serverName
             };
             Axios.post('http://localhost:3002/post/add_server', data)
-                //.then((res) => console.log(res));
+                .then((res) => setUpdate(!update));
         } else {
             let form = new FormData();
             form.append('file', file);
@@ -58,7 +59,7 @@ const ProjectList = () => {
             form.append('server', serverName);
 
             Axios.post('http://localhost:3002/post/add_server_picture', form, { headers: {'Content-Type': 'multipart/form-data'}})
-            .then((res) => console.log(res));
+            .then((res) => setUpdate(!update));
         }
     };
 
@@ -71,11 +72,19 @@ const ProjectList = () => {
         <div className={classes.box}>
             <br></br>
             <div className={classes.serverIcon}>
-                <Link to="/profile">
+                <Link to="/login" style={{textDecoration: "none"}}>
+                    <Tooltip title="LOG OUT" placement="right">
+                        <Avatar sx={{ width: "4.8vh", height: "4.8vh", backgroundColor: "#B23B3B", textAlign: "center" }}>X</Avatar>
+                    </Tooltip>
+                </Link>
+            </div>
+            <div className={classes.serverIcon}>
+                <Link  style={{textDecoration: "none"}} to="/profile">
                     <Tooltip title="PROFILE" placement="right">
                         <Avatar sx={{ width: "4.8vh", height: "4.8vh"}}>P</Avatar>
                     </Tooltip>
                 </Link>
+                <br></br>
             </div>
             {serverList != "User not in any server" && typeof serverList != 'string'?
             serverList.map((content, idx) => (

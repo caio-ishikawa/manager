@@ -73,9 +73,9 @@ io.on('connection', socket => {
         console.log(email, "has been added to: ", room);
         io.sockets.in(room).emit("added", ({ email }));
     });
-    socket.on("uploaded", ({ room, email, fileName, fileKey }) => {
+    socket.on("uploaded", ({ room, email, fileName, fileKey, pic }) => {
         console.log(email, "has uploaded", fileName, "to server");
-        io.sockets.in(room).emit("uploaded", ({ email, fileName, fileKey }));
+        io.sockets.in(room).emit("uploaded", ({ email, fileName, fileKey, pic }));
     });
     socket.on("disconnect", ( data ) => {
         io.emit("user left", ( user ));

@@ -57,7 +57,8 @@ const ProjectView = (props) => {
         setAllChat([]);
         socket.emit("swap servers", ({email: globalEmail}));
         console.log("CLIENT SIDE HAS JOINED SERVER: ", currentServer);
-        socket.emit("join", ({roomName: currentChannel ? currentChannel: "placeholder", email: globalEmail}));
+        let channelID = currentChannel + currentServer;
+        socket.emit("join", ({roomName: currentChannel ? channelID: "placeholder", email: globalEmail}));
 
         // gets messages //
         Axios.get('http://localhost:3002/get/server_msgs', {params: {server: currentServer, channel: currentChannel}})
@@ -82,7 +83,8 @@ const ProjectView = (props) => {
     // Sets message state based on user's input and emits typing event to socket //
     const userTyping = (e) => {
         if (e.target.value.length > 0) {
-            socket.emit("typing", ({ room: currentChannel, email: globalEmail }));
+            let channelID = currentChannel + currentServer;
+            socket.emit("typing", ({ room: channelID, email: globalEmail }));
         } else {
             socket.emit("stopped typing", ({ room: currentChannel, email: globalEmail}));
             setTyping(false);
@@ -94,8 +96,9 @@ const ProjectView = (props) => {
     // Sends message to desired server //
     const sendMessage = (e) => {
         // Emits message to socket //
-        socket.emit('message', ({ message: document.getElementById('input_base').value, email: globalEmail, room: currentChannel, pic: profilePic }));
-        socket.emit("stopped typing", ({ room: currentChannel, email: globalEmail }));
+        let channelID = currentChannel + currentServer;
+        socket.emit('message', ({ message: document.getElementById('input_base').value, email: globalEmail, room: channelID, pic: profilePic }));
+        socket.emit("stopped typing", ({ room: channelID, email: globalEmail }));
         e.preventDefault();
 
         //Sends data to Chat model //
@@ -129,18 +132,20 @@ const ProjectView = (props) => {
 
     // Submits file to S3 bucket + its data to DB //
     const submitFile =  async() => {
+        let channelID = currentChannel + currentServer;
         const fileData = new FormData();
         fileData.append('file', file)
         fileData.append('user', globalEmail);
         fileData.append('server', currentServer);
         fileData.append('channel', currentChannel);
+        fileData.append('pic', profilePic);
 
         const result = await Axios.post('http://localhost:3002/post/file', fileData , { headers: {'Content-Type': 'multipart/form-data'}});
         try {
             if (result.data.file_key !== undefined) {
                 //console.log("FILE RESULT: ", result)
                 let key = result.data.file_key;
-                setAllChat((_messages) => [ ..._messages, { globalEmail, key}]);
+                setAllChat((_messages) => [ ..._messages, { email: globalEmail, key: key}]);
                 socket.emit("uploaded", ({ email: globalEmail, server: currentServer, fileName:result.data.name, fileKey: result.data.key, picture: profilePic }));
             }
         } catch (err) {

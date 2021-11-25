@@ -24,7 +24,7 @@ const ActivityGrid = ( props ) => {
     const changeChannel = (channel) => {
         let channelID = channel + currentServer;
         console.log(channelID);
-        setCurrentChannel(channelID);
+        setCurrentChannel(channel);
         socket.emit("join channel", ({ channel: channelID, email: globalEmail}));
     };
 

@@ -20,6 +20,8 @@ const Main = () => {
     const [globalEmail, setGlobalEmail] = useContext(UserEmailContext);
     console.log(globalEmail);
 
+
+
     return(
         <div className={classes.root}>
             <Grid className={classes.root} container spacing={0}>
